@@ -1,0 +1,9 @@
+certifi==2018.8.24
+chardet==3.0.4
+idna==2.7
+nltk==3.3
+pkg-resources==0.0.0
+requests==2.19.1
+six==1.11.0
+urllib3==1.23
+vaderSentiment==3.2.1
