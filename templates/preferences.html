@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h4>Select 2 types of cuisines you like..</h4>
+<form action="preferences" method="POST">
+
+  <div>
+    <p>Preference 1</p>
+
+    <select>
+      <option value="american">American</option>
+      <option value="indian">Indian</option>
+      <option value="mexican">Mexican</option>
+      <option value="french">French</option>
+      <option value="mediterranean">Mediterranean</option>
+      <option value="thai">Thai</option>
+      <option value="greek">Greek</option>
+      <option value="japanese">Japanese</option>
+      <option value="italian">Italian</option>
+      <option value="chinese">Chinese</option>
+      
+  </div>
+
+  
+ <div>
+    <p>Preference 2</p>
+
+    <select>
+      <option value="american">American</option>
+      <option value="indian">Indian</option>
+      <option value="mexican">Mexican</option>
+      <option value="french">French</option>
+      <option value="mediterranean">Mediterranean</option>
+      <option value="thai">Thai</option>
+      <option value="greek">Greek</option>
+      <option value="japanese">Japanese</option>
+      <option value="italian">Italian</option>
+      <option value="chinese">Chinese</option>
+      
+  </div>
+
+
+  <div>
+    <input type="submit">
+  </div>
+
+</form>
+
+
+
+{% endblock %}

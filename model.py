@@ -3,9 +3,7 @@ from flask import Flask
 
 db = SQLAlchemy()
 
-app = Flask(__name__)
-# Required to use Flask sessions and the debug toolbar
-app.secret_key = "ABC"
+
 
 ##############################################################################
 # Model definitions
@@ -29,7 +27,6 @@ class User(db.Model):
 
     pref = db.relationship("Preference")
     fav = db.relationship("Favourite")
-    rest = db.relationship("Restaurant_details")
 
 
     
@@ -40,38 +37,35 @@ class Preference(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return ("<Preference preference_id={} user_id={} cusine1={} cusine2={}".format(self.preference_id, self.user_id, self.cusine1, self.cusine2))
+        return ("<Preference preference_id={} user_id={} cuisine={}".format(self.preference_id, self.user_id, self.cuisine))
 
 
     __tablename__ = "preferences"
 
     preference_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable= False)
-    cusine1 = db.Column(db.String(100), nullable=False)
-    cusine2 = db.Column(db.String(100), nullable=False)
+    cuisine = db.Column(db.String(100), nullable=False)
 
-    user_p = db.relationship("User")
+    user = db.relationship("User")
     
 
 class Restaurant_details(db.Model):
-    """Save restaurant info from API calls to use as cache"""
+    """Save restaurant info """
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return ("<Restaurant_details restaurant_id={} user_id={} sentiment_score={} category={} price={}".format(self.preference_id, self.user_id, self.sentiment_score, self.category, self.price))
+        return ("<Restaurant_details restaurant_id={} restaurant_name={} category={} price={}".format(self.preference_id, self.user_id, self.restaurant_name, self.category, self.price))
 
 
     __tablename__ = "restaurants"
 
     restaurant_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable= False)
-    sentiment_score = db.Column(db.Integer, nullable=False)
+    restaurant_name = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(100), nullable=False)
     price = db.Column(db.String(6))
-    date_of_score = db.Column(db.DateTime)
+    
 
-    user_r = db.relationship("User")
 
 
     
@@ -90,8 +84,8 @@ class Favourite(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable= False)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.restaurant_id'), nullable= False)
 
-    user_f = db.relationship("User")
-    rest_f = db.relationship("Restaurant_details")
+    user = db.relationship("User")
+    rest = db.relationship("Restaurant_details")
   
 
 
@@ -115,6 +109,6 @@ if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
     # you in a state of being able to work with the database directly.
 
-    #from server import app
+    from server import app
     connect_to_db(app)
     print("Connected to DB.")

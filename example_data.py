@@ -18,83 +18,29 @@ def users():
     User.query.delete()
 
     #inserting records
-    divya = User(fname = "divya", lname = "gupta", email = "dg@gmail", password = "123"), \
-    jen = User(fname = "jen", lname = "low", email = "jl@gmail", password = "123"), \
+    divya = User(fname = "divya", lname = "gupta", email = "dg@gmail", password = "123")
+    jen = User(fname = "jen", lname = "low", email = "jl@gmail", password = "123")
     deb = User(fname = "deb", lname = "moore", email = "dm@gmail", password = "123")
-    Preference((divya.user_p).user_id, cusine1 = "indian", cusine2 = "agh"), \
-    Preference((jen.user_p).user_id, cusine1 = "gfh", cusine2 = "chg"), \
-    Preference((deb.user_p).user_id, cusine1 = "fvh", cusine2 = "rdr"),\
-    Restaurant_details((divya.user_r).user_id, sentiment_score = 2, category = "fb", price = "$", date_of_score = ),\
-    Restaurant_details((jen.user_r).user_id, sentiment_score = 2, category = "fbd", price = "$", date_of_score = ),\
-    Restaurant_details((deb.user_r).user_id, sentiment_score = 2, category = "fv", price = "$", date_of_score = ),\
-    Favourite((divya.user_f).user_id, restaurant_id = (divya.rest_f).restaurant_id),\
-    Favourite((jen.user_f).user_id, restaurant_id = (jen.rest_f).restaurant_id),\
-    Favourite((deb.user_f).user_id, restaurant_id = (deb.rest_f).restaurant_id) 
-
-    list1 = [divya,jen,deb]    
-
-
+    
+    divya.pref.append(Preference(user=divya, cuisine="indian"))
+    divya.pref.append(Preference(user=divya, cuisine="thai"))
+    jen.pref.append(Preference(user = jen, cuisine = "thai"))
+    jen.pref.append(Preference(user = jen, cuisine = "chinese"))
+    deb.pref.append(Preference(user = deb, cuisine = "thai"))
+    deb.pref.append(Preference(user = deb, cuisine = "indian"))
+    rest1 = Restaurant_details(restaurant_name = "taj1", category = "fb", price = "$")
+    rest2 = Restaurant_details(restaurant_name = "taj2", category = "fbfv", price = "$$")
+    rest3 = Restaurant_details(restaurant_name = "taj3", category = "fbnhm", price = "$")
+    divya.fav.append(Favourite(user = divya, rest = rest1))
+    jen.fav.append(Favourite(user = jen, rest = rest3))
+    deb.fav.append(Favourite(user = deb, rest = rest1))
+    
+    list1 = [divya,jen,deb,rest1,rest2,rest3]    
 
     # We need to add to the session
-    db.session.add(list1)
+    db.session.add_all(list1)
 
     db.session.commit()
-
-# def preferences():
-#     """Insert sample user preferences into DB """
-
-
-#     # Delete all rows in table, so if we need to run this a second time,
-#     # we won't be trying to add duplicate users
-#     Preference.query.delete()
-
-#     #inserting records
-#     pref = [Preference(user_id = ??, cusine1 = "indian", cusine2 = "agh"), \
-#         Preference(user_id = ??, cusine1 = "gfh", cusine2 = "chg"), \
-#         Preference(user_id = ??, cusine1 = "fvh", cusine2 = "rdr")
-
-#     # We need to add to the session
-#     db.session.add(pref)
-
-#     db.session.commit()
-
-
-# def rest_details():
-#     """Insert sample restaurant details into DB """
-
-
-#     # Delete all rows in table, so if we need to run this a second time,
-#     # we won't be trying to add duplicate users
-#     Restaurant_details.query.delete()
-
-#     #inserting records
-#     details = [Restaurant_details(user_id = ??, sentiment_score = 2, category = "fb", price = "$", date_of_score = ), \
-#         Restaurant_details(user_id = ??, sentiment_score = 2, category = "fbd", price = "$", date_of_score = ), \
-#         Restaurant_details(user_id = ??, sentiment_score = 2, category = "fv", price = "$", date_of_score = )
-
-#     # We need to add to the session
-#     db.session.add(details)
-
-#     db.session.commit()
-
-
-# def favs():
-#     """Insert sample user favs into DB """
-
-
-#     # Delete all rows in table, so if we need to run this a second time,
-#     # we won't be trying to add duplicate users
-#     Favourite.query.delete()
-
-#     #inserting records
-#     fav = [Favourite(user_id = ??, restaurant_id =  ), \
-#         Favourite(user_id = ??, restaurant_id =  ), \
-#         Favourite(user_id = ??, restaurant_id =  )
-
-#     # We need to add to the session
-#     db.session.add(fav)
-
-#     db.session.commit()
 
 
 
@@ -106,7 +52,5 @@ if __name__ == "__main__":
 
     # Import different types of data
     users()
-    preferences()
-    rest_details()
-    favs()
+
         
