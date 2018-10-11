@@ -22,18 +22,18 @@ def users():
     jen = User(fname = "jen", lname = "low", email = "jl@gmail", password = "123")
     deb = User(fname = "deb", lname = "moore", email = "dm@gmail", password = "123")
     
-    divya.pref.append(Preference(user=divya, cuisine="indian"))
-    divya.pref.append(Preference(user=divya, cuisine="thai"))
-    jen.pref.append(Preference(user = jen, cuisine = "thai"))
-    jen.pref.append(Preference(user = jen, cuisine = "chinese"))
-    deb.pref.append(Preference(user = deb, cuisine = "thai"))
-    deb.pref.append(Preference(user = deb, cuisine = "indian"))
+    divya.pref.append(Preference(cuisine="indian"))
+    divya.pref.append(Preference(cuisine="thai"))
+    jen.pref.append(Preference(cuisine = "thai"))
+    jen.pref.append(Preference(cuisine = "chinese"))
+    deb.pref.append(Preference(cuisine = "thai"))
+    deb.pref.append(Preference(cuisine = "indian"))
     rest1 = Restaurant_details(restaurant_name = "taj1", category = "fb", price = "$")
     rest2 = Restaurant_details(restaurant_name = "taj2", category = "fbfv", price = "$$")
     rest3 = Restaurant_details(restaurant_name = "taj3", category = "fbnhm", price = "$")
-    divya.fav.append(Favourite(user = divya, rest = rest1))
-    jen.fav.append(Favourite(user = jen, rest = rest3))
-    deb.fav.append(Favourite(user = deb, rest = rest1))
+    divya.fav.append(Favourite(rest = rest1))
+    jen.fav.append(Favourite(rest = rest3))
+    deb.fav.append(Favourite(rest = rest1))
     
     list1 = [divya,jen,deb,rest1,rest2,rest3]    
 

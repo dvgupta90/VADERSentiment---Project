@@ -2,12 +2,12 @@
 {% block content %}
 
 <h4>Select 2 types of cuisines you like..</h4>
-<form action="preferences" method="POST">
+<form action="process_preferences" method="POST">
 
   <div>
     <p>Preference 1</p>
 
-    <select>
+    <select name= "pref1">
       <option value="american">American</option>
       <option value="indian">Indian</option>
       <option value="mexican">Mexican</option>
@@ -18,6 +18,7 @@
       <option value="japanese">Japanese</option>
       <option value="italian">Italian</option>
       <option value="chinese">Chinese</option>
+  </select>
       
   </div>
 
@@ -25,7 +26,7 @@
  <div>
     <p>Preference 2</p>
 
-    <select>
+    <select name= "pref2">
       <option value="american">American</option>
       <option value="indian">Indian</option>
       <option value="mexican">Mexican</option>
@@ -36,7 +37,7 @@
       <option value="japanese">Japanese</option>
       <option value="italian">Italian</option>
       <option value="chinese">Chinese</option>
-      
+      </select>
   </div>
 
 
