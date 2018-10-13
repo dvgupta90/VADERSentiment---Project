@@ -86,6 +86,23 @@ class Favourite(db.Model):
 
     user = db.relationship("User")
     rest = db.relationship("Restaurant_details")
+
+
+
+class Review(db.Model):
+    """Data of reviews"""
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return ("<Review table_id={} biz_id={} review={}>".format(self.table_id, self.biz_id, self.review))
+
+
+    __tablename__ = "reviews"
+
+    table_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    biz_id = db.Column(db.String(100), nullable=False)
+    review = db.Column(db.String(10000), nullable=False) 
   
 
 

@@ -2,10 +2,12 @@ from model import User
 from model import Preference
 from model import Restaurant_details
 from model import Favourite
+from model import Review
 
 from model import connect_to_db, db
 from server import app
 import datetime
+import csv
 
 
 def users():
@@ -16,6 +18,8 @@ def users():
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate users
     User.query.delete()
+    Preference.query.delete()
+    Restaurant_details.query.delete()
 
     #inserting records
     divya = User(fname = "divya", lname = "gupta", email = "dg@gmail", password = "123")
@@ -42,6 +46,26 @@ def users():
 
     db.session.commit()
 
+def reviews():
+    """Load restaurant review data"""   
+
+    Review.query.delete()
+
+    with open('combined_reviews.csv') as csvfile:
+        readCSV = csv.reader(csvfile, delimiter = ',')
+
+        for row in readCSV:
+            biz_id = row[0]
+            review = row[1]
+
+            each_review = Review(biz_id =biz_id, review =review)
+
+            db.session.add(each_review)
+
+        db.session.commit()    
+
+           
+
 
 
 if __name__ == "__main__":
@@ -52,5 +76,5 @@ if __name__ == "__main__":
 
     # Import different types of data
     users()
-
+    reviews()
         

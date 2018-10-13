@@ -2,8 +2,10 @@ import requests
 from flask import Flask, redirect, request, render_template, session,flash
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
-from model import connect_to_db, db, User, Preference, Restaurant_details, Favourite
+from model import connect_to_db, db, User, Preference, Restaurant_details, Favourite, Review
 import os
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
 
 app = Flask(__name__)
 app.jinja_env.undefined = StrictUndefined
@@ -20,19 +22,30 @@ yelp_api = os.environ['YELP_API_KEY']
 url = "https://api.yelp.com/v3/businesses"
 
 
-@app.route("/api_call", methods=['GET'])
-def api_call():
+# @app.route("/api_call", methods=['GET'])
+# def api_call():
+#     headers = {'Authorization': 'Bearer ' + yelp_api}
+#     payload= {"location": "94043", "term": "Restaurants - Indian"}
+#     response = requests.get(url+"/search", headers=headers, params = payload)
+#     data = response.json()
+
+#     list1 = []
+#     for business in data['businesses']:
+#         list1.append(business['name'])
+    
+    
+#     return render_template("trial_api.html",data =list1)
+
+@app.route("/trial_api_call", methods=['GET'])
+def trial_api_call():
     headers = {'Authorization': 'Bearer ' + yelp_api}
-    payload= {"location": "94043", "term": "bars"}
+    payload= {"location": "94043", "term": "Restaurants - thai"}
     response = requests.get(url+"/search", headers=headers, params = payload)
     data = response.json()
 
-    list1 = []
-    for business in data['businesses']:
-        list1.append(business['name'])
     
     
-    return render_template("trial_api.html",data =list1)
+    return render_template("trial_api_review.html",data =data)
 
 
 @app.route("/api1", methods=['GET'])
@@ -227,6 +240,49 @@ def user_profile():
     user = User.query.get(session["user_id"])
 
     return render_template("user_profile.html", user=user)    
+
+
+@app.route('/reviews')   
+def reviews():
+    """Sentiment score for restaurant""" 
+
+    
+
+    # review = db.session.query(Review.review).filter(Review.biz_id == "UXNoTqkjA2zdXPftcqBvYQ").all()
+
+    
+        # print("{} {}".format(sentence, str(snt)))
+
+    # list2 = []    
+    
+    # for r in review:
+    #     r = ', ,'.join([str(r[0])])
+    #     list2.append(r)
+    # list2    
+
+    # list3 = []
+
+    
+
+    analyser = SentimentIntensityAnalyzer()
+    # for item in list3:
+
+    snt = analyser.polarity_scores("I just got a call from my boss - does he realise it's Saturday? :(")
+    #     list3.append(snt)
+    # list3   
+    s= print("{}".format(str(snt)))
+
+            
+
+        # s = print_sentiment_scores(r)
+
+    
+        # list1 = []
+        # for each_review in review:
+        #     list1.append(print_sentiment_scores(each_review))
+        # list1   
+
+    return render_template("reviews.html", data = s)
 
 
 
