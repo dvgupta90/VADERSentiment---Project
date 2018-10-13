@@ -5,6 +5,9 @@ from jinja2 import StrictUndefined
 from model import connect_to_db, db, User, Preference, Restaurant_details, Favourite, Review
 import os
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+# from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import nltk
+from nltk import punkt
 
 
 app = Flask(__name__)
@@ -246,35 +249,60 @@ def user_profile():
 def reviews():
     """Sentiment score for restaurant""" 
 
-    
 
-    # review = db.session.query(Review.review).filter(Review.biz_id == "UXNoTqkjA2zdXPftcqBvYQ").all()
+    review = db.session.query(Review.review).filter(Review.biz_id == "UXNoTqkjA2zdXPftcqBvYQ").all()
 
+    ## Udita -----------------------------------
+    final_list_d = []
+    for tup in review:
+        final_list_d.append(tup[0])
+    # (final_list_d)
     
+    analyser = SentimentIntensityAnalyzer()
+     # sentences = [
+     #                "The plot was good, but the characters are uncompelling and the dialog is not great.", 
+     #                "A really bad, horrible book.",       
+     #                "At least it isn't a horrible book."
+     #            ]
+    analyzed_reviews = []
+    for sentence in final_list_d:
+        # print(sentence)
+        snt = analyser.polarity_scores(sentence)
+        # sentiment = vaderSentiment(sentence)
+        # print ("\n\t" + str(snt))
+        analyzed_reviews.append(str(snt))
+
+      
+    ## Udita end --------------------------------------
+
+
+
+
+
+
         # print("{} {}".format(sentence, str(snt)))
 
     # list2 = []    
     
-    # for r in review:
-    #     r = ', ,'.join([str(r[0])])
-    #     list2.append(r)
+    # 
     # list2    
 
-    # list3 = []
+
 
     
 
-    analyser = SentimentIntensityAnalyzer()
-    # for item in list3:
+    # analyser = SentimentIntensityAnalyzer()
+    # # for item in list3:
 
-    snt = analyser.polarity_scores("I just got a call from my boss - does he realise it's Saturday? :(")
-    #     list3.append(snt)
-    # list3   
-    s= print("{}".format(str(snt)))
+    # snt = analyser.polarity_scores("I just got a call from my boss - does he realise it's Saturday? :(")
+    # #     list3.append(snt)
+    # # list3   
+    # s= print("{}".format(str(snt)))
 
             
 
         # s = print_sentiment_scores(r)
+
 
     
         # list1 = []
@@ -282,7 +310,7 @@ def reviews():
         #     list1.append(print_sentiment_scores(each_review))
         # list1   
 
-    return render_template("reviews.html", data = s)
+    return render_template("reviews.html", data = analyzed_reviews)
 
 
 
