@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+
+<a class="waves-effect waves-light btn">button</a>
+<a class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>button</a>
+<a class="waves-effect waves-light btn"><i class="material-icons right">cloud</i>button</a>
+
+
+
+<div class="row">
+      <div class="col s7 push-s5">
+            <h2 class="header">Horizontal Card</h2>
+            <div class="card horizontal">
+              <div class="card-image">
+                <img src="https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/one_pot_chorizo_and_15611_16x9.jpg">
+              </div>
+              <div class="card-stacked">
+                <div class="card-content">
+                  <p>I am a very simple card. I am good at containing small bits of information.</p>
+                </div>
+                <div class="card-action">
+                  <a href="#">This is a link</a>
+                </div>
+              </div>
+            </div>
+      </div>
+      <div class="col s5 pull-s7"><span class="flow-text">5-columns wide pulled to the left by 7-columns.</span></div>
+    </div>
+
+<div>
+    
+<ul>
+   
+   {% for count in range(length) %}
+ 
+   
+       <div class="col s8">
+        <!-- <h2 class="header">Horizontal Card</h2> -->
+        <div class="card horizontal">
+          <div class="card-image">
+            <img src="{{image[count]}}">
+          </div>
+          <div class="card-stacked">
+            <div class="card-content">
+                <h4>
+                    <a href="/every_rest_score">{{name[count]}}</a>
+                </h4>
+                <a class="waves-effect waves-light btn">button</a>
+            </div>
+            <!-- <div class="card-action">
+              <a href="#">This is a link</a>
+            </div> -->
+          </div>
+        </div>
+      </div>
+        {%endfor%}
+    </ul>
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+{% endblock %}

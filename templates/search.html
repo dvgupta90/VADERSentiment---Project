@@ -2,7 +2,16 @@
 {% block content %}
 
 <div>
-  <input type="text" placeholder="Search">
+    <form action="/process_searchbox">
+  <input type="text" placeholder="Enter a zipcode" name="zipcode">
+  <select name= "cuisine">
+      <option value="american">American</option>
+      <option value="indian">Indian</option>
+      <option value="thai">Thai</option>
+
+  </select>
+  <button type= "submit"> </button>
+  </form>
 </div>
 
 {% endblock %}

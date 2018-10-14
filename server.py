@@ -42,7 +42,7 @@ url = "https://api.yelp.com/v3/businesses"
 @app.route("/trial_api_call", methods=['GET'])
 def trial_api_call():
     headers = {'Authorization': 'Bearer ' + yelp_api}
-    payload= {"location": "94043", "term": "Restaurants - thai"}
+    payload= {"location": "94043", "term": "Restaurants - Indian"}
     response = requests.get(url+"/search", headers=headers, params = payload)
     data = response.json()
 
@@ -58,18 +58,7 @@ def api1_call():
     response = requests.get(url+"/search", headers=headers, params = payload)
     data = response.json()
     
-    # goal: collect reviews for each business
-    # data = {bizI-d: [reviews], ...}
-    # list of ids = []
-    # loop through data json and pull out each busibness id
-        # append to list of ids
-    # create empty dictionary of biz_data called d
-    # loop through each id in list of ids
-        # make a request to yelp api for reviews based on business id
-        # d[biz_id] = resp.json()['reviews']
-
-    # for each key in the biz dictionary
-        # run analysis of value (reviews)
+   
 
 
 
@@ -95,12 +84,6 @@ def api1_call():
     #     for item in data1:
     #         biz_dic[biz_id] = item['text']
         
-
-        
-   
-   
-
-       
 
 
     
@@ -177,6 +160,8 @@ def preference_form_process():
     flash(f"Your cuisine preferences have been saved.")
     return redirect("/search")
 
+
+
 @app.route('/login', methods=['GET'])
 def login_form():
     """Show login form."""
@@ -184,6 +169,8 @@ def login_form():
         return redirect("/search")    
 
     return render_template("login_form.html")
+
+
 
 
 @app.route('/process_login', methods=['POST'])
@@ -211,6 +198,7 @@ def login_process():
     return redirect("/search")
 
 
+
 @app.route('/logout')
 def logout():
     """Log out."""
@@ -218,6 +206,7 @@ def logout():
     del session["user_id"]
     flash("Logged Out.")
     return redirect("/")    
+
 
 
 @app.route('/search')
@@ -232,6 +221,39 @@ def search():
 
     return render_template("search.html")
 
+id_list = []
+@app.route('/process_searchbox', methods = ["GET"])
+def processing_search():
+    """User submits criteria to be searched"""
+
+    zipcode = request.args.get("zipcode")
+    cuisine = request.args.get("cuisine")
+    headers = {'Authorization': 'Bearer ' + yelp_api}
+    payload= {"location": str(zipcode), "term": str(cuisine)}
+    response = requests.get(url+"/search", headers=headers, params = payload)
+    data = response.json()
+
+    for business in data['businesses']:
+        id_list.append(business['id'])
+
+    list1 = []
+    for business in data['businesses']:
+        list1.append(business['name'])
+
+    list2 = []
+    for business in data['businesses']:
+        list2.append(business['image_url'])
+    length= len(list2)    
+        
+
+
+
+
+    return render_template("trial_search_api_udi.html", name=list1, image = list2, length=length)
+
+
+
+
 
 @app.route('/profile')
 def user_profile():
@@ -245,6 +267,8 @@ def user_profile():
     return render_template("user_profile.html", user=user)    
 
 
+
+
 @app.route('/reviews')   
 def reviews():
     """Sentiment score for restaurant""" 
@@ -252,7 +276,7 @@ def reviews():
 
     review = db.session.query(Review.review).filter(Review.biz_id == "UXNoTqkjA2zdXPftcqBvYQ").all()
 
-    ## Udita -----------------------------------
+
     final_list_d = []
     for tup in review:
         final_list_d.append(tup[0])
@@ -273,45 +297,20 @@ def reviews():
         analyzed_reviews.append(str(snt))
 
       
-    ## Udita end --------------------------------------
 
 
 
-
-
-
-        # print("{} {}".format(sentence, str(snt)))
-
-    # list2 = []    
-    
-    # 
-    # list2    
-
-
-
-    
-
-    # analyser = SentimentIntensityAnalyzer()
-    # # for item in list3:
-
-    # snt = analyser.polarity_scores("I just got a call from my boss - does he realise it's Saturday? :(")
-    # #     list3.append(snt)
-    # # list3   
-    # s= print("{}".format(str(snt)))
-
-            
-
-        # s = print_sentiment_scores(r)
-
-
-    
-        # list1 = []
-        # for each_review in review:
-        #     list1.append(print_sentiment_scores(each_review))
-        # list1   
+  
 
     return render_template("reviews.html", data = analyzed_reviews)
 
+
+@app.route("/every_rest_score")
+def each_restaurant_page():
+    """shows each restaurant score and reviews"""   
+
+
+    return render_template("every_rest_score.html")
 
 
 if __name__ == "__main__":
