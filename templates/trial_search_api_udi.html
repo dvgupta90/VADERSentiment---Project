@@ -10,25 +10,6 @@
 
 
 
-<div class="row">
-      <div class="col s7 push-s5">
-            <h2 class="header">Horizontal Card</h2>
-            <div class="card horizontal">
-              <div class="card-image">
-                <img src="https://ichef.bbci.co.uk/food/ic/food_16x9_832/recipes/one_pot_chorizo_and_15611_16x9.jpg">
-              </div>
-              <div class="card-stacked">
-                <div class="card-content">
-                  <p>I am a very simple card. I am good at containing small bits of information.</p>
-                </div>
-                <div class="card-action">
-                  <a href="#">This is a link</a>
-                </div>
-              </div>
-            </div>
-      </div>
-      <div class="col s5 pull-s7"><span class="flow-text">5-columns wide pulled to the left by 7-columns.</span></div>
-    </div>
 
 <div>
     
@@ -41,14 +22,14 @@
         <!-- <h2 class="header">Horizontal Card</h2> -->
         <div class="card horizontal">
           <div class="card-image">
-            <img src="{{image[count]}}">
+            <img src="{{image[count]}}" height= "100" width="200">
           </div>
           <div class="card-stacked">
             <div class="card-content">
                 <h4>
-                    <a href="/every_rest_score">{{name[count]}}</a>
+                    <a href="/process_searchbox/{{biz_id[count]}}">{{name[count]}}</a>
                 </h4>
-                <a class="waves-effect waves-light btn">button</a>
+                <a id = "add-to-fav-button" class="waves-effect waves-light btn" data-id={{biz_id[count]}} data-category={{categories[count]}} data-price={{price[count]}} data-name={{name[count]}} data-image={{image[count]}}>Add to Favourite</a>
             </div>
             <!-- <div class="card-action">
               <a href="#">This is a link</a>
@@ -60,8 +41,26 @@
     </ul>
 
     
+</div> 
+
+
+<br>
+<br>
+
+<div>
+    {% if offset > 0 %}
+        <a href="/process_searchbox?zipcode={{zipcode}}&cuisine={{cuisine}}&offset={{offset-10}}">PREVIOUS</a>
+
+    {% endif %}
+
+    <a href="/process_searchbox?zipcode={{zipcode}}&cuisine={{cuisine}}&offset={{offset+10}}">NEXT</a>
+    
+    
 </div>
 
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="/static/js/add_user_fav.js"></script>
 
 
 

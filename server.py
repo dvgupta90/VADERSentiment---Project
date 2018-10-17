@@ -221,35 +221,64 @@ def search():
 
     return render_template("search.html")
 
-id_list = []
+
 @app.route('/process_searchbox', methods = ["GET"])
 def processing_search():
     """User submits criteria to be searched"""
 
     zipcode = request.args.get("zipcode")
     cuisine = request.args.get("cuisine")
+    offset = int(request.args.get("offset", 0)) #this is not coming from form , 
+        #this gets loaded in the function when NEXT button is clicked. 
+        # when the button is clicked the page gets re-rendered and with that 
+        # this function gets re-called and then those parameters are inserted into html/jinja
+
+
     headers = {'Authorization': 'Bearer ' + yelp_api}
-    payload= {"location": str(zipcode), "term": str(cuisine)}
+    payload= {"location": str(zipcode), "term": str(cuisine), "limit": int(10), "offset": offset}
     response = requests.get(url+"/search", headers=headers, params = payload)
     data = response.json()
+    
 
+    id_list = []
     for business in data['businesses']:
         id_list.append(business['id'])
 
-    list1 = []
+    name_list = []
     for business in data['businesses']:
-        list1.append(business['name'])
+        name_list.append(business['name'])
 
-    list2 = []
+    image_list = []
     for business in data['businesses']:
-        list2.append(business['image_url'])
-    length= len(list2)    
+        image_list.append(business['image_url'])
+    
+    length= len(image_list) 
+
+    categories_list = []
+    for business in data['businesses']:
+        categories_list.append(((business['categories'])[0])['title'])
+
+    price_list = []
+    for business in data['businesses']:
+        price_list.append(business['price'])    
+                
+
+    # for business in data['businesses']:
+    #     print(((business['categories'])[0])['title'])
+
+
+
+    ############# ADDING TO FAVS ###########################################
+
         
+        
+    
 
 
-
-
-    return render_template("trial_search_api_udi.html", name=list1, image = list2, length=length)
+    return render_template("trial_search_api_udi.html", name=name_list, image = image_list, 
+        biz_id = id_list, length=length,
+        categories=categories_list, price=price_list,
+        offset = offset, zipcode=zipcode, cuisine=cuisine)
 
 
 
@@ -269,40 +298,65 @@ def user_profile():
 
 
 
-@app.route('/reviews')   
-def reviews():
+@app.route('/process_searchbox/<biz_id>')   
+def reviews(biz_id):
     """Sentiment score for restaurant""" 
 
 
-    review = db.session.query(Review.review).filter(Review.biz_id == "UXNoTqkjA2zdXPftcqBvYQ").all()
+    
+    review = db.session.query(Review.review).filter(Review.biz_id == biz_id).all()
 
 
     final_list_d = []
     for tup in review:
         final_list_d.append(tup[0])
-    # (final_list_d)
     
     analyser = SentimentIntensityAnalyzer()
-     # sentences = [
-     #                "The plot was good, but the characters are uncompelling and the dialog is not great.", 
-     #                "A really bad, horrible book.",       
-     #                "At least it isn't a horrible book."
-     #            ]
+
     analyzed_reviews = []
     for sentence in final_list_d:
-        # print(sentence)
+       
         snt = analyser.polarity_scores(sentence)
-        # sentiment = vaderSentiment(sentence)
-        # print ("\n\t" + str(snt))
-        analyzed_reviews.append(str(snt))
+       
+        analyzed_reviews.append(sentence + str(snt))
 
       
-
-
-
   
 
     return render_template("reviews.html", data = analyzed_reviews)
+
+
+
+@app.route("/add_to_fav")
+def add_to_fav():
+    """User can add a restaurant to their fav"""
+
+    ###get data from javascript like you would do for a POST form. request.form
+    ## and save that data in variables and push it to DB or push directly to DB 
+
+    business = Restaurant_details.query.filter_by(biz_id = buss_id).first() 
+
+        if business == None:
+            business = Restaurant_details(biz_id = business['id'], 
+                restaurant_name = business['name'], 
+                category = ((business['categories'])[0])['title'], 
+                price = business['price'], 
+                image = business['image_url'])
+
+
+            db.session.add(businesses)
+
+            db.session.commit()
+
+        user_object = User.query.get(session['user_id'])
+        user_object.fav.append(Favourite(rest = business))
+        db.session.commit()
+
+
+        return jsonify(Message:str("Your Favourite has been saved."))
+
+
+
 
 
 @app.route("/every_rest_score")

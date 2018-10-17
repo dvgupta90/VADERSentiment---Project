@@ -2,8 +2,14 @@
 {% block content %}
 <div>
     {%for name in data%}
-        <li>{{name}}
-          </li>  
+        <!-- <li>{{name}} 
+
+          </li>  --> 
+          <li>{% set s = name.split('{') %}
+          {{s[0]}}
+          <br>{{s[1]}} 
+      </li>
+            
 
         {%endfor%}
    

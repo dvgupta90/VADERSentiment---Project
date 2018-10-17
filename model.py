@@ -61,9 +61,12 @@ class Restaurant_details(db.Model):
     __tablename__ = "restaurants"
 
     restaurant_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    biz_id = db.Column(db.String(100), nullable=False)
     restaurant_name = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(100), nullable=False)
     price = db.Column(db.String(6))
+    image = db.Column(db.String(1000))
+    url = db.Column(db.String(1000))
     
 
 
