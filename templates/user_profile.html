@@ -6,6 +6,16 @@
   <p>User ID: {{ user.user_id }}</p>
   <p>Email: {{ user.email }}</p>
   <p>Password: {{ user.password }}</p>
+<div>
+
+{% for fav in user.fav %}
+    <p>Favorites = {{fav.rest.restaurant_name}}<br>
+        {{fav.rest.category}}<br></p>
+    <img src="{{fav.rest.image}}" height= "100" width="200">
+
+
+{% endfor %}
+</div>
 
 
 

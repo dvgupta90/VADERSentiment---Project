@@ -2,23 +2,25 @@
 
 
 function display_message(results){
-    let message = results;
+    let message = results.message;
     alert(message);
+    // $('.add-to-fav-button').attr('disabled', true);
 
 // it'll take results whatever server.py file returns
 
 }
 
 
-function add_to_fav() {
+function add_to_fav(evt) {
     let payload = {
-    yelp_biz_id = $('#add-to-fav-button').data('id');
-    yelp_rest_name = $('#add-to-fav-button').data('name');
-    yelp_category = $('#add-to-fav-button').data('category');
-    yelp_price = $('#add-to-fav-button').data('price');
-    yelp_image_url = $('#add-to-fav-button').data('image');
-    }
+    yelp_biz_id:$(evt.target).data('id'),
+    yelp_rest_name:$(evt.target).data('name'),
+    yelp_rating:$(evt.target).data('rating'),
+    yelp_category:$(evt.target).data('category'),
+    yelp_price:$(evt.target).data('price'),
+    yelp_image_url:$(evt.target).data('image'),
+    };
     $.post('/add_to_fav', payload, display_message);
 }
-
-$('#add-to-fav-button').on('click', add_to_fav);
+// using a jquery class selector
+$('.add-to-fav-button').on('click', add_to_fav);

@@ -1,12 +1,29 @@
 {% extends 'base.html' %}
+{% block head %}
+<!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="../static/css/materialize.min.css"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+{% endblock %}
+
+
+
 {% block content %}
 
 
 
-
+<!-- ####################CSS styling########## -->
 <a class="waves-effect waves-light btn">button</a>
 <a class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>button</a>
 <a class="waves-effect waves-light btn"><i class="material-icons right">cloud</i>button</a>
+
+<!-- ####################CSS styling########## -->
+
+
 
 
 
@@ -15,21 +32,21 @@
     
 <ul>
    
-   {% for count in range(length) %}
+   {% for business in businesses %}
  
    
        <div class="col s8">
         <!-- <h2 class="header">Horizontal Card</h2> -->
         <div class="card horizontal">
           <div class="card-image">
-            <img src="{{image[count]}}" height= "100" width="200">
+            <img src="{{business['image_url']}}" height= "100" width="200">
           </div>
           <div class="card-stacked">
             <div class="card-content">
                 <h4>
-                    <a href="/process_searchbox/{{biz_id[count]}}">{{name[count]}}</a>
+                    <a href="/process_searchbox/{{business['id']}}">{{business['name']}}</a>
                 </h4>
-                <a id = "add-to-fav-button" class="waves-effect waves-light btn" data-id={{biz_id[count]}} data-category={{categories[count]}} data-price={{price[count]}} data-name={{name[count]}} data-image={{image[count]}}>Add to Favourite</a>
+                <a id = "add-to-fav-button" class="waves-effect waves-light add-to-fav-button btn" data-id={{business['id']}} data-rating={{business['rating']}} data-category={{(((business['categories'])[0])['title'])}} data-price={{business['price']}} data-name={{business['name']}} data-image={{business['image_url']}}>Add to Favourite</a>
             </div>
             <!-- <div class="card-action">
               <a href="#">This is a link</a>
@@ -42,6 +59,9 @@
 
     
 </div> 
+
+
+
 
 
 <br>
@@ -57,6 +77,11 @@
     
     
 </div>
+
+<!-- ###################CSS styling ##################################-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="../static/js/materialize.min.js"></script>
+<!-- ########################################################################## -->
 
 
 <script src="http://code.jquery.com/jquery.js"></script>

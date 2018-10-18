@@ -1,9 +1,10 @@
 import requests
-from flask import Flask, redirect, request, render_template, session,flash
+from flask import Flask, redirect, request, render_template, session,flash,jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 from model import connect_to_db, db, User, Preference, Restaurant_details, Favourite, Review
 import os
+from pprint import pprint
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 # from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import nltk
@@ -42,7 +43,7 @@ url = "https://api.yelp.com/v3/businesses"
 @app.route("/trial_api_call", methods=['GET'])
 def trial_api_call():
     headers = {'Authorization': 'Bearer ' + yelp_api}
-    payload= {"location": "94043", "term": "Restaurants - Indian"}
+    payload= {"location": "94043", "term": "Restaurants - thai"}
     response = requests.get(url+"/search", headers=headers, params = payload)
     data = response.json()
 
@@ -225,6 +226,8 @@ def search():
 @app.route('/process_searchbox', methods = ["GET"])
 def processing_search():
     """User submits criteria to be searched"""
+ 
+    
 
     zipcode = request.args.get("zipcode")
     cuisine = request.args.get("cuisine")
@@ -238,48 +241,19 @@ def processing_search():
     payload= {"location": str(zipcode), "term": str(cuisine), "limit": int(10), "offset": offset}
     response = requests.get(url+"/search", headers=headers, params = payload)
     data = response.json()
-    
-
-    id_list = []
-    for business in data['businesses']:
-        id_list.append(business['id'])
-
-    name_list = []
-    for business in data['businesses']:
-        name_list.append(business['name'])
-
-    image_list = []
-    for business in data['businesses']:
-        image_list.append(business['image_url'])
-    
-    length= len(image_list) 
-
-    categories_list = []
-    for business in data['businesses']:
-        categories_list.append(((business['categories'])[0])['title'])
-
-    price_list = []
-    for business in data['businesses']:
-        price_list.append(business['price'])    
-                
-
-    # for business in data['businesses']:
-    #     print(((business['categories'])[0])['title'])
 
 
 
-    ############# ADDING TO FAVS ###########################################
+    business = data['businesses'] #this returns a list of dictionaries.     
 
-        
-        
-    
+    for buss in business:
+        if 'price' not in buss.keys():
+            buss['price'] = "$$"
 
 
-    return render_template("trial_search_api_udi.html", name=name_list, image = image_list, 
-        biz_id = id_list, length=length,
-        categories=categories_list, price=price_list,
-        offset = offset, zipcode=zipcode, cuisine=cuisine)
 
+    return render_template("trial_search_api_udi.html", businesses= business,
+        offset = offset,zipcode=zipcode, cuisine=cuisine)
 
 
 
@@ -291,7 +265,12 @@ def user_profile():
     if 'user_id' not in session:
         return redirect("/login")
 
-    user = User.query.get(session["user_id"])
+    #in this one query--> we are doing a double joined load,
+    #by (accessing relationship deeper than one level)..
+    #meaning trying to get from one table to another to another
+    #also we are getting user object from User table by using .get
+    user = User.query.options(db.joinedload('fav').joinedload('rest')).get(session["user_id"])
+
 
     return render_template("user_profile.html", user=user)    
 
@@ -305,8 +284,7 @@ def reviews(biz_id):
 
     
     review = db.session.query(Review.review).filter(Review.biz_id == biz_id).all()
-
-
+    
     final_list_d = []
     for tup in review:
         final_list_d.append(tup[0])
@@ -327,33 +305,51 @@ def reviews(biz_id):
 
 
 
-@app.route("/add_to_fav")
+@app.route("/add_to_fav", methods=["POST"])
 def add_to_fav():
     """User can add a restaurant to their fav"""
 
     ###get data from javascript like you would do for a POST form. request.form
     ## and save that data in variables and push it to DB or push directly to DB 
+    user_object = User.query.get(session['user_id'])
 
-    business = Restaurant_details.query.filter_by(biz_id = buss_id).first() 
+    # Get form variables in javascript file
+    rest_biz_id = request.form["yelp_biz_id"]
+    rest_name = request.form["yelp_rest_name"]
+    rest_rating = request.form["yelp_rating"]
+    rest_category = request.form["yelp_category"]
+    rest_price = request.form["yelp_price"]
+    rest_image = request.form["yelp_image_url"]
 
-        if business == None:
-            business = Restaurant_details(biz_id = business['id'], 
-                restaurant_name = business['name'], 
-                category = ((business['categories'])[0])['title'], 
-                price = business['price'], 
-                image = business['image_url'])
+
+    restaurant = Restaurant_details.query.filter_by(biz_id = rest_biz_id).first() 
+
+    if restaurant is None:
+        restaurant = Restaurant_details(biz_id = rest_biz_id, 
+            restaurant_name = rest_name,
+            rating = int(float(rest_rating)), 
+            category = rest_category, 
+            price = rest_price, 
+            image = rest_image)
 
 
-            db.session.add(businesses)
+        db.session.add(restaurant)
 
-            db.session.commit()
-
-        user_object = User.query.get(session['user_id'])
-        user_object.fav.append(Favourite(rest = business))
         db.session.commit()
 
+    
+    #checking if the user already has saved a restaurant as a fav
+    #checking if the restaurant saved and user who saved the restaurant are not repeated
+    #making sure that another user is able to add the same restaurant in thier fav but,
+    #does not add that restaurant again to the Restaurant tables in DB
+    fav = Favourite.query.filter(Favourite.restaurant_id == restaurant.restaurant_id, 
+        Favourite.user_id== user_object.user_id).all()
+    if not fav:
+        user_object.fav.append(Favourite(rest = restaurant))
+        db.session.commit()
 
-        return jsonify(Message:str("Your Favourite has been saved."))
+    show_status = {'message':'Your Favourite has been saved'}
+    return jsonify(show_status)
 
 
 
