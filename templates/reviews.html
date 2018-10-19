@@ -1,6 +1,20 @@
 {% extends 'base.html' %}
+
+{% block head %}
+<style type="text/css">
+        html, body { height: 600px; margin: 0; padding: 0; }
+        #map { height: 600px; }
+</style>
+
+{% endblock head %}
+
 {% block content %}
+
+<div id="map" data-lat={{latitude}} data-lng={{longitude}}></div>
+
+
 <div>
+
     {%for name in data%}
         <!-- <li>{{name}} 
 
@@ -15,4 +29,14 @@
    
 </div>
 
-{% endblock %}
+
+<!-- ##################### Google maps API ################# -->
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&callback=initMap" async defer></script>
+
+<!-- ######################## Google maps API ##################### -->
+
+
+<script src="/static/js/googlemaps.js"></script>
+
+{% endblock content %}

@@ -2,12 +2,8 @@
 <html>
 <head>
  {% block head %}
-
  {% endblock %}
-
-
-
-    
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <title>Reviews</title>
 </head>
 
@@ -17,7 +13,7 @@
   
 
 
-    {% if "user_id" in session %}
+{% if "user_id" in session %}
   <form action="/logout">
     <input type="submit" value="Logout" />
 </form>
@@ -33,9 +29,7 @@
   {{ flash }}
 {% endfor %}
 
-{% block content %}
-<!--Import jQuery before materialize.js-->
-      
+{% block content %}      
 
 {% endblock %}
 

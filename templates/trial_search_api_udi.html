@@ -44,7 +44,7 @@
           <div class="card-stacked">
             <div class="card-content">
                 <h4>
-                    <a href="/process_searchbox/{{business['id']}}">{{business['name']}}</a>
+                    <a href="/process_searchbox/{{business['id']}}?lat={{(business['coordinates'])['latitude']}}&lng={{(business['coordinates'])['longitude']}}" class="map">{{business['name']}}</a>
                 </h4>
                 <a id = "add-to-fav-button" class="waves-effect waves-light add-to-fav-button btn" data-id={{business['id']}} data-rating={{business['rating']}} data-category={{(((business['categories'])[0])['title'])}} data-price={{business['price']}} data-name={{business['name']}} data-image={{business['image_url']}}>Add to Favourite</a>
             </div>
@@ -79,13 +79,10 @@
 </div>
 
 <!-- ###################CSS styling ##################################-->
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script type="text/javascript" src="../static/js/materialize.min.js"></script>
 <!-- ########################################################################## -->
-
-
-<script src="http://code.jquery.com/jquery.js"></script>
 <script src="/static/js/add_user_fav.js"></script>
+
 
 
 

@@ -23,6 +23,7 @@ app.secret_key = "ABC"
 yelp_api = os.environ['YELP_API_KEY']
 
 
+
 url = "https://api.yelp.com/v3/businesses"
 
 
@@ -250,6 +251,9 @@ def processing_search():
         if 'price' not in buss.keys():
             buss['price'] = "$$"
 
+    for buss in business:
+        pprint ((buss['coordinates'])['latitude'])       
+
 
 
     return render_template("trial_search_api_udi.html", businesses= business,
@@ -282,7 +286,15 @@ def reviews(biz_id):
     """Sentiment score for restaurant""" 
 
 
-    
+    googlemaps_api = os.environ['GOOGLE_API_KEY']
+
+    # we stored lat and lng as parameters/ form way dictionary values 
+    # in the HREF of restaurant name in html that loops over each restaurant div
+    # we are extracting that information here and passing to reviews.html in jinja 
+    # and then passing that info to JS through data attributes
+    latitude = request.args.get('lat')
+    longitude = request.args.get('lng')
+
     review = db.session.query(Review.review).filter(Review.biz_id == biz_id).all()
     
     final_list_d = []
@@ -301,7 +313,8 @@ def reviews(biz_id):
       
   
 
-    return render_template("reviews.html", data = analyzed_reviews)
+    return render_template("reviews.html", data = analyzed_reviews, 
+        api_key=googlemaps_api, latitude=latitude, longitude=longitude)
 
 
 
@@ -361,6 +374,15 @@ def each_restaurant_page():
 
 
     return render_template("every_rest_score.html")
+
+
+
+
+@app.route("/check_your_review")
+def check_review_sentiment():
+    """user can type text and see the sentiment score on it"""  
+
+    return render_template("check_your_review.html")  
 
 
 if __name__ == "__main__":
