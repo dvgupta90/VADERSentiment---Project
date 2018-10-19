@@ -8,15 +8,29 @@
 
 
 {% block content %}
-<form action="/process_user_review">
+<form action="/process_check_your_review" method="GET" id="senti">
 
     <div>
       <label>Enter your review:
-        <input type="text" name="review" required>
+        <input type="text" name="review" id="user-review" style="width:1000px" required>
       </label>
+
+      <button type="submit">Get Score</button> 
+      <!-- we are giving id to FORM and not button coz its a good code way
+      to put event listener on what is logically happening. we are not just clicking a random button, we are submitting a form and that's the event we want to listen to and perform our next action. -->
+
     </div>
 
-
   </form>
+
+  <div id="review-score"></div>
+
+  <!-- <script src="/static/js/check_your_review_score.js"></script> -->
+
+  <script src="/static/js/check_your_review_score.js">
+
+
+
+  </script>
 
 {% endblock %}

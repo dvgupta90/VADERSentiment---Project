@@ -382,7 +382,25 @@ def each_restaurant_page():
 def check_review_sentiment():
     """user can type text and see the sentiment score on it"""  
 
+
     return render_template("check_your_review.html")  
+
+
+@app.route("/process_check_your_review", methods=["GET"])
+def process_check_review_sentiment():
+    """user can type text and see the sentiment score on it"""  
+
+    sentence = request.args.get("review")
+    print(sentence)
+
+    analyser = SentimentIntensityAnalyzer()
+
+       
+    snt = analyser.polarity_scores(sentence) 
+    print(snt)
+    show_score= {'score':snt}  
+
+    return jsonify(show_score) 
 
 
 if __name__ == "__main__":
