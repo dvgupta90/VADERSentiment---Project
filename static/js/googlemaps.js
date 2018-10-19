@@ -3,12 +3,13 @@
 
 function initMap() {
 
-    let myImageURL = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+    
     let restaurant = {lat: $('#map').data('lat'), 
         lng: $('#map').data('lng')};
     let map = new google.maps.Map(document.querySelector('#map'), {
         center: restaurant,
-        zoom: 8,
+        zoom: 10,
+        
     // Note: the following are marked the opposite of the default setting
     // (that is, they're marked "false" if they're true by
     // default, and "true" if they're false by default) so that
@@ -24,11 +25,38 @@ function initMap() {
     });
 
 
+    let marker = new google.maps.Marker({
+      position: restaurant,
+      map: map,
+      animation:google.maps.Animation.DROP,
+
+    });  
+
+    let trafficLayer = new google.maps.TrafficLayer();
+    trafficLayer.setMap(map);
+
+    let styles = [
+  {
+      "featureType": "water",
+      "stylers": [
+        { "color": "#2529da" }
+      ]
+    }
+
+  ];
+
+  let styledMapOptions = {
+      name: 'Custom Style'
+  };
+
+  let customMapType = new google.maps.StyledMapType(
+          styles,
+          styledMapOptions);
+
+  map.mapTypes.set('map_style', customMapType);
+  map.setMapTypeId('map_style');
+
 }
 
-let marker = new google.maps.Marker({
-  position: restaurant,
-  map: map,
-  icon: myImageURL
 
     
