@@ -9,6 +9,9 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 # from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import nltk
 from nltk import punkt
+import hashlib
+
+
 
 
 app = Flask(__name__)
@@ -16,7 +19,7 @@ app.jinja_env.undefined = StrictUndefined
 app.jinja_env.auto_reload = True
 
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = "ABC"
+app.secret_key = os.environ['SECRET_KEY']
 
 
 
@@ -122,9 +125,19 @@ def register_process():
     last_name = request.form["lastname"]
     email = request.form["email"]
     password = request.form["password"]
+    password = password.encode()
+    #####hashing#########
+    hash_pwd = hashlib.sha256(password)
+    hash_pwd = hash_pwd.hexdigest()
+    print()
+    print()
+    print()
+    print()
+    print(hash_pwd)
    
 
-    new_user = User(fname=first_name, lname=last_name, email=email, password=password)
+    new_user = User(fname=first_name, lname=last_name, 
+        email=email, password=hash_pwd)
 
     db.session.add(new_user)
     db.session.commit()
@@ -183,6 +196,9 @@ def login_process():
     # Get form variables
     email = request.form["email"]
     password = request.form["password"]
+    # password = password.encode()
+    # user_hash_pwd = hashlib.sha256(password)
+    # user_hash_pwd = user_hash_pwd.hexdigest()
 
     user = User.query.filter_by(email=email).first()
 
@@ -191,6 +207,7 @@ def login_process():
         return redirect("/login")
 
     if user.password != password:
+    # if user.password != user_hash_pwd:
         flash("Incorrect password")
         return redirect("/login")
 

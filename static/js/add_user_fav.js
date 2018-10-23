@@ -2,8 +2,8 @@
 
 
 function display_message(results){
-    let message = results.message;
-    alert(message);
+    let showmessage = results.message;
+    alert(showmessage);
     // $('.add-to-fav-button').attr('disabled', true);
 
 // it'll take results whatever server.py file returns

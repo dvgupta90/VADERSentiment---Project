@@ -115,11 +115,11 @@ class Review(db.Model):
 
 
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgresql:///reviews'):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///reviews'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_ECHO'] = False
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
@@ -128,7 +128,7 @@ def connect_to_db(app):
 
 if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
-    # you in a state of being able to work with the database directly.
+    # us in a state of being able to work with the database directly.
 
     from server import app
     connect_to_db(app)
