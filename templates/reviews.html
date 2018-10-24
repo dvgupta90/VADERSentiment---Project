@@ -20,6 +20,13 @@
 <br>
 
 <div>
+  {{restaurant_name}} has an average score of: {{avg_score_for_restaurant}}
+</div>
+
+<br>
+<br>
+
+<div>
 
     {%for name in data%}
         <!-- <li>{{name}} 
@@ -27,7 +34,8 @@
           </li>  --> 
           <li>{% set s = name.split('{') %}
           {{s[0]}}
-          <br>{{s[1]}} 
+          <br>{% set a =s[1].replace('}',"") %}
+          {{a}} 
       </li>
             
 

@@ -6,14 +6,13 @@ from model import connect_to_db, db, User, Preference, Restaurant_details, Favou
 import os
 from pprint import pprint
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-# from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import nltk
 from nltk import punkt
 import hashlib
 
 
 
-
+################################################################################
 app = Flask(__name__)
 app.jinja_env.undefined = StrictUndefined
 app.jinja_env.auto_reload = True
@@ -22,11 +21,8 @@ app.jinja_env.auto_reload = True
 app.secret_key = os.environ['SECRET_KEY']
 
 
-
+####### Setting up for YELP API call ########################################### 
 yelp_api = os.environ['YELP_API_KEY']
-
-
-
 url = "https://api.yelp.com/v3/businesses"
 
 
@@ -88,8 +84,6 @@ def api1_call():
     #     data1 = d1.json()['reviews']
     #     for item in data1:
     #         biz_dic[biz_id] = item['text']
-        
-
 
     
     return render_template("api1.html",data=biz_dic)    
@@ -97,9 +91,10 @@ def api1_call():
 
 
 
-
-
-
+################################################################################
+#   Homepage, Registration and Adding User Preferences routes                  #
+#                                                                              #
+################################################################################
 
 @app.route('/')
 def homepage():
@@ -115,7 +110,6 @@ def register_form():
     return render_template("register_form.html")
 
 
-
 @app.route('/process_registeration', methods=['POST'])
 def register_process():
     """Process registration."""
@@ -129,8 +123,6 @@ def register_process():
     #####hashing#########
     hash_pwd = hashlib.sha256(password)
     hash_pwd = hash_pwd.hexdigest()
- 
-   
 
     new_user = User(fname=first_name, lname=last_name, 
         email=email, password=hash_pwd)
@@ -172,6 +164,10 @@ def preference_form_process():
     return redirect("/search")
 
 
+################################################################################
+#   Login and Logout routes                                                    #
+#                                                                              #
+################################################################################
 
 @app.route('/login', methods=['GET'])
 def login_form():
@@ -183,12 +179,11 @@ def login_form():
 
 
 
-
 @app.route('/process_login', methods=['POST'])
 def login_process():
     """Process login."""
 
-    # we are using POST here so that user's login ingo is not displayed in URL
+    # we are using POST here so that user's login info is not displayed in URL
     # Get form variables
     email = request.form["email"]
     password = request.form["password"]
@@ -222,6 +217,10 @@ def logout():
     return redirect("/")    
 
 
+################################################################################
+# Search page and Reviews page routes (includes YELP and GOOGLE MAPS API CALL) #
+#                                                                              #
+################################################################################
 
 @app.route('/search')
 def search():
@@ -239,6 +238,7 @@ def search():
         return redirect("/preferences")   
 
     return render_template("search.html")
+
 
 
 # defining Helper function that queries YELP API
@@ -278,24 +278,7 @@ def processing_search():
     return render_template("trial_search_api_udi.html", businesses= business,
         offset = offset,zipcode=zipcode, cuisine=cuisine)
 
-
-@app.route('/profile')
-def user_profile():
-    """Show info about a logged in user"""
-
-    if 'user_id' not in session:
-        return redirect("/login")
-
-    #in this one query--> we are doing a double joined load,
-    #by (accessing relationship deeper than one level)..
-    #meaning trying to get from one table to another to another
-    #also we are getting user object from User table by using .get
-    user = User.query.options(db.joinedload('fav').joinedload('rest')).get(session["user_id"])
-
-
-    return render_template("user_profile.html", user=user)    
-
-
+    
 
 
 @app.route('/process_searchbox/<biz_id>')   
@@ -311,27 +294,58 @@ def reviews(biz_id):
     # and then passing that info to JS through data attributes
     latitude = request.args.get('lat')
     longitude = request.args.get('lng')
+    restaurant_name = request.args.get('name')
 
     review = db.session.query(Review.review).filter(Review.biz_id == biz_id).all()
     
     final_list_d = []
     for tup in review:
         final_list_d.append(tup[0])
+
     
     analyser = SentimentIntensityAnalyzer()
 
+    sum_compound_score = 0
     analyzed_reviews = []
     for sentence in final_list_d:
        
         snt = analyser.polarity_scores(sentence)
+        sum_compound_score += snt['compound']
        
         analyzed_reviews.append(sentence + str(snt))
 
+    avg_compound_score = sum_compound_score/len(analyzed_reviews)
+    avg_compound_score = ("%.3f" % avg_compound_score) 
       
-  
 
-    return render_template("reviews.html", data = analyzed_reviews, 
-        api_key=googlemaps_api, latitude=latitude, longitude=longitude)
+    return render_template("reviews.html", restaurant_name=restaurant_name, 
+        avg_score_for_restaurant= avg_compound_score,
+        data = analyzed_reviews, api_key=googlemaps_api, 
+        latitude=latitude, longitude=longitude)
+
+
+
+################################################################################
+#   User Profile and Add to Favourites routes                                  #
+#                                                                              #
+################################################################################
+
+
+@app.route('/profile')
+def user_profile():
+    """Show info about a logged in user"""
+
+    if 'user_id' not in session:
+        return redirect("/login")
+
+    #in this one query--> we are doing a double joined load,
+    #by (accessing relationship deeper than one level)..
+    #meaning trying to get from one table to another to another
+    #also we are getting user object from User table by using .get
+    user = User.query.options(db.joinedload('fav').joinedload('rest')).get(session["user_id"])
+
+    return render_template("user_profile.html", user=user)
+
 
 
 
@@ -383,21 +397,14 @@ def add_to_fav():
 
 
 
-
-
-@app.route("/every_rest_score")
-def each_restaurant_page():
-    """shows each restaurant score and reviews"""   
-
-
-    return render_template("every_rest_score.html")
-
-
-
+################################################################################
+#   Check score on your review route (interactive mode)                        #
+#                                                                              #
+################################################################################
 
 @app.route("/check_your_review")
 def check_review_sentiment():
-    """user can type text and see the sentiment score on it"""  
+    """User can type text and see the sentiment score on it"""  
 
     if 'user_id' not in session:
         flash ("Please Log In to continue")
@@ -408,19 +415,20 @@ def check_review_sentiment():
 
 @app.route("/process_check_your_review", methods=["GET"])
 def process_check_review_sentiment():
-    """user can type text and see the sentiment score on it"""  
+    """Process check your review"""  
 
     sentence = request.args.get("review")
     print(sentence)
 
     analyser = SentimentIntensityAnalyzer()
-
-       
+    
     snt = analyser.polarity_scores(sentence) 
     print(snt)
     show_score= {'score':snt}  
 
     return jsonify(show_score) 
+
+
 
 
 if __name__ == "__main__":

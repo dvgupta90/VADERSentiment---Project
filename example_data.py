@@ -13,7 +13,7 @@ import hashlib
 def users():
     """Insert sample users into DB """
 
-    print("users")
+    print("users") ## for debugging 
 
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate users
@@ -35,16 +35,20 @@ def users():
     
     divya.pref.append(Preference(cuisine="indian"))
     divya.pref.append(Preference(cuisine="thai"))
+
     jen.pref.append(Preference(cuisine = "thai"))
     jen.pref.append(Preference(cuisine = "chinese"))
+
     deb.pref.append(Preference(cuisine = "thai"))
     deb.pref.append(Preference(cuisine = "indian"))
+
     rest1 = Restaurant_details(biz_id = "abc", restaurant_name = "taj1",
      rating = 3, category = "fb", price = "$")
     rest2 = Restaurant_details(biz_id = "def",restaurant_name = "taj2", 
         rating = 3, category = "fbfv", price = "$$")
     rest3 = Restaurant_details(biz_id = "ghi",restaurant_name = "taj3", 
         rating = 3, category = "fbnhm", price = "$")
+
     divya.fav.append(Favourite(rest = rest1))
     jen.fav.append(Favourite(rest = rest3))
     deb.fav.append(Favourite(rest = rest1))
@@ -84,7 +88,7 @@ if __name__ == "__main__":
     # In case tables haven't been created, create them
     db.create_all()
 
-    # Import different types of data
+    # Seed data into tables
     users()
     reviews()
         
