@@ -8,7 +8,7 @@ from model import connect_to_db, db
 from server import app
 import datetime
 import csv
-
+import hashlib
 
 def users():
     """Insert sample users into DB """
@@ -21,10 +21,17 @@ def users():
     Preference.query.delete()
     Restaurant_details.query.delete()
 
+    #hashing passwords for fake data
+    password= "123"
+    password = password.encode()
+    hash_pwd = hashlib.sha256(password)
+    hash_pwd = hash_pwd.hexdigest() #converts into a string
+
+
     #inserting records
-    divya = User(fname = "divya", lname = "gupta", email = "dg@gmail", password = "123")
-    jen = User(fname = "jen", lname = "low", email = "jl@gmail", password = "123")
-    deb = User(fname = "deb", lname = "moore", email = "dm@gmail", password = "123")
+    divya = User(fname = "divya", lname = "gupta", email = "dg@gmail", password = hash_pwd)
+    jen = User(fname = "jen", lname = "low", email = "jl@gmail", password = hash_pwd)
+    deb = User(fname = "deb", lname = "moore", email = "dm@gmail", password = hash_pwd)
     
     divya.pref.append(Preference(cuisine="indian"))
     divya.pref.append(Preference(cuisine="thai"))

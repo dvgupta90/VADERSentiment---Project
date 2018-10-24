@@ -129,11 +129,7 @@ def register_process():
     #####hashing#########
     hash_pwd = hashlib.sha256(password)
     hash_pwd = hash_pwd.hexdigest()
-    print()
-    print()
-    print()
-    print()
-    print(hash_pwd)
+ 
    
 
     new_user = User(fname=first_name, lname=last_name, 
@@ -196,20 +192,19 @@ def login_process():
     # Get form variables
     email = request.form["email"]
     password = request.form["password"]
-    # password = password.encode()
-    # user_hash_pwd = hashlib.sha256(password)
-    # user_hash_pwd = user_hash_pwd.hexdigest()
+    password = password.encode()
+    user_hash_pwd = hashlib.sha256(password)
+    user_hash_pwd = user_hash_pwd.hexdigest()
 
     user = User.query.filter_by(email=email).first()
 
     if not user:
         flash("No such user")
-        return redirect("/login")
+        return redirect("/") # the user can register or enter the correct email
 
-    if user.password != password:
-    # if user.password != user_hash_pwd:
-        flash("Incorrect password")
-        return redirect("/login")
+    if user.password != user_hash_pwd:
+        flash("Incorrect password") # the user can register or enter the correct pwd
+        return redirect("/")
 
     session["user_id"] = user.user_id
 
@@ -232,8 +227,13 @@ def logout():
 def search():
     """Search for a restaurant"""
 
+    if 'user_id' not in session:
+        flash ("Please Log In to continue")
+        return redirect("/login")
+
     if 'user_id' in session:
         user = User.query.get(session["user_id"])
+
     if len(user.pref) == 0:
         flash("Please select your preferences.") 
         return redirect("/preferences")   
@@ -241,11 +241,23 @@ def search():
     return render_template("search.html")
 
 
+# defining Helper function that queries YELP API
+#we just seperated this function from /process_searchbox route
+def get_businesses_by_zip(zipcode, cuisine, offset=0):
+    """Helper function that queries Yelp API"""
+    headers = {'Authorization': 'Bearer ' + yelp_api}
+    payload= {"location": str(zipcode), "term": str(cuisine), "limit": int(10), "offset": offset}
+    response = requests.get(url+"/search", headers=headers, params = payload)
+    return response.json()
+
+
 @app.route('/process_searchbox', methods = ["GET"])
 def processing_search():
     """User submits criteria to be searched"""
  
-    
+    if 'user_id' not in session:
+        flash ("Please Log In to continue")
+        return redirect("/login")
 
     zipcode = request.args.get("zipcode")
     cuisine = request.args.get("cuisine")
@@ -254,29 +266,17 @@ def processing_search():
         # when the button is clicked the page gets re-rendered and with that 
         # this function gets re-called and then those parameters are inserted into html/jinja
 
-
-    headers = {'Authorization': 'Bearer ' + yelp_api}
-    payload= {"location": str(zipcode), "term": str(cuisine), "limit": int(10), "offset": offset}
-    response = requests.get(url+"/search", headers=headers, params = payload)
-    data = response.json()
-
-
+    data = get_businesses_by_zip(zipcode, cuisine, offset) #calling this function
+    #from above.. giving it parameters from this function
 
     business = data['businesses'] #this returns a list of dictionaries.     
 
     for buss in business:
         if 'price' not in buss.keys():
             buss['price'] = "$$"
-
-    for buss in business:
-        pprint ((buss['coordinates'])['latitude'])       
-
-
-
+       
     return render_template("trial_search_api_udi.html", businesses= business,
         offset = offset,zipcode=zipcode, cuisine=cuisine)
-
-
 
 
 @app.route('/profile')
@@ -399,7 +399,10 @@ def each_restaurant_page():
 def check_review_sentiment():
     """user can type text and see the sentiment score on it"""  
 
-
+    if 'user_id' not in session:
+        flash ("Please Log In to continue")
+        return redirect("/login")
+    
     return render_template("check_your_review.html")  
 
 
