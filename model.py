@@ -113,8 +113,6 @@ class Review(db.Model):
        
 
 
-
-
 def connect_to_db(app, db_uri='postgresql:///reviews'):
     """Connect the database to our Flask app."""
 

@@ -14,7 +14,7 @@ function showReview(evt) {
     let formData = {"review": $("#user-review").val()};
     console.log(formData);
 
-    $.get(url, formData, displayScore);
+    $.post(url, formData, displayScore);
 }
 
 $("#senti").on('submit',showReview);

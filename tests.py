@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 from flask import Flask 
 from server import app 
-from model import db, connect_to_db 
+from model import db, connect_to_db, User, Preference, Restaurant_details, Favourite, Review
 from example_data import users, reviews
 from flask import session
 import server
@@ -109,7 +109,29 @@ class Logged_in_Tests(unittest.TestCase):
     def test_search_page(self):
         """Test this page can only be reached if user is in session"""
         result = self.client.get("/search")
-        self.assertIn(b"Search", result.data)    
+        self.assertIn(b"Search", result.data) 
+
+
+    def test_add_to_fav_(self):
+        """Test user's if favourite restaurant is added to DB"""
+        result = self.client.post("/add_to_fav", data={"yelp_biz_id":"JA_V9TqDCrkgknqrcUndIQ", 
+                "yelp_rest_name":"Siam", "yelp_rating":"4", 
+                "yelp_category":"Thai", "yelp_price":"$$", 
+                "yelp_image_url":"https://s3-media2.fl.yelpcdn.com/bphoto/1SkZwZrRZkQSzRMn_Trs3w/o.jpg" })
+
+        DB_result = Restaurant_details.query.filter_by(biz_id = "JA_V9TqDCrkgknqrcUndIQ").first()
+        self.assertIsNotNone(DB_result) #testing that the returned result is not NONE
+        self.assertEqual(DB_result.restaurant_name, 'Siam') #testing restaurant name is what it should be
+        
+        self.assertIn(b"Your Favourite has been saved", result.data)
+
+
+
+    def test_check_your_review_page(self):
+        result = self.client.post('/process_check_your_review', 
+                data={'review': 'food was good service was bad'})
+        self.assertIn(b"neu",result.data)
+             
 
 
 
@@ -159,6 +181,9 @@ class Mock_FlaskTests(unittest.TestCase):
         result = self.client.get('/process_searchbox', data={'zipcode': '94043', 'cuisine': 'indian'})
         self.assertIn(b"Dosa Paratha", result.data)
           
+
+
+
 
 
 if __name__ == "__main__":

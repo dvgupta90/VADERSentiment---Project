@@ -413,11 +413,11 @@ def check_review_sentiment():
     return render_template("check_your_review.html")  
 
 
-@app.route("/process_check_your_review", methods=["GET"])
+@app.route("/process_check_your_review", methods=["POST"])
 def process_check_review_sentiment():
     """Process check your review"""  
 
-    sentence = request.args.get("review")
+    sentence = request.form.get("review")
     print(sentence)
 
     analyser = SentimentIntensityAnalyzer()
