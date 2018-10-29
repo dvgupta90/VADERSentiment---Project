@@ -10,7 +10,22 @@
 
 {% block content %}
 
+
+
+
+
+
+
 <div id="map" data-lat={{latitude}} data-lng={{longitude}}></div>
+
+
+<!-- ################# word cloud ##################################### -->
+<div id = "word_cloud">
+  
+</div>
+
+<!-- #################### word cloud #################################### -->
+
 
 <div>
   VADER computed Sentiment score of Reviews
@@ -51,6 +66,20 @@
 <!-- ######################## Google maps API ##################### -->
 
 
-<script src="/static/js/googlemaps.js"></script>
+<script type="text/javascript" src="/static/js/googlemaps.js"></script>
+
+
+
+
+<!-- ################### word cloud ####################################### -->
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="../static/js/word_cloud.js""></script>
+<script type="text/javascript" src="../static/js/reviews_word_cloud.js""></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+
+<!-- ################### word cloud ####################################### -->
+
 
 {% endblock content %}
