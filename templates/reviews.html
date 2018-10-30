@@ -3,7 +3,13 @@
 {% block head %}
 <style type="text/css">
         html, body { height: 600px; margin: 0; padding: 0; }
-        #map { height: 600px; }
+        
+        #map { height: 100%; width: 25%; float: right;}
+
+        #word_cloud { width: 75%; float: left;}
+
+        #vader { margin-top: 625px;}
+
 </style>
 
 {% endblock head %}
@@ -11,53 +17,40 @@
 {% block content %}
 
 
+  <div id="map" data-lat={{latitude}} data-lng={{longitude}}></div>
+  <!-- ################# word cloud ##################################### -->
+  <div id = "word_cloud"></div>
+  <!-- #################### word cloud #################################### -->
 
+<div id='vader'>
 
+  <h1>VADER computed Sentiment score of Reviews</h1>
+  <div>
+    {{restaurant_name}} has an average score of: {{avg_score_for_restaurant}}
+  </div>
 
+  <br>
+  <br>
 
+  <div>
 
-<div id="map" data-lat={{latitude}} data-lng={{longitude}}></div>
+      {%for name in data%}
+          <!-- <li>{{name}} 
 
+            </li>  --> 
+            <li>{% set s = name.split('{') %}
+            {{s[0]}}
+            <br>{% set a =s[1].replace('}',"") %}
+            {{a}} 
+        </li>
+              
 
-<!-- ################# word cloud ##################################### -->
-<div id = "word_cloud">
+          {%endfor%}
+     
+  </div>
+
   
 </div>
-
-<!-- #################### word cloud #################################### -->
-
-
-<div>
-  VADER computed Sentiment score of Reviews
-</div>
-<br>
-<br>
-<br>
-
-<div>
-  {{restaurant_name}} has an average score of: {{avg_score_for_restaurant}}
-</div>
-
-<br>
-<br>
-
-<div>
-
-    {%for name in data%}
-        <!-- <li>{{name}} 
-
-          </li>  --> 
-          <li>{% set s = name.split('{') %}
-          {{s[0]}}
-          <br>{% set a =s[1].replace('}',"") %}
-          {{a}} 
-      </li>
-            
-
-        {%endfor%}
-   
-</div>
-
 
 <!-- ##################### Google maps API ################# -->
 
@@ -72,13 +65,13 @@
 
 
 <!-- ################### word cloud ####################################### -->
-<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<!-- <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script> -->
+
 <script type="text/javascript" src="../static/js/word_cloud.js""></script>
 <script type="text/javascript" src="../static/js/reviews_word_cloud.js""></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-<script src="https://d3js.org/d3-color.v1.min.js"></script>
-<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-
 <!-- ################### word cloud ####################################### -->
 
 
