@@ -11,6 +11,7 @@ from nltk import punkt
 from nltk.tokenize import sent_tokenize, word_tokenize 
 import hashlib
 import csv
+import json
 
 
 
@@ -287,42 +288,6 @@ def processing_search():
 def reviews(biz_id):
     """Sentiment score for restaurant""" 
 
-
-    # googlemaps_api = os.environ['GOOGLE_API_KEY']
-
-    # # we stored lat and lng as parameters/ form way dictionary values 
-    # # in the HREF of restaurant name in html that loops over each restaurant div
-    # # we are extracting that information here and passing to reviews.html in jinja 
-    # # and then passing that info to JS through data attributes
-    # latitude = request.args.get('lat')
-    # longitude = request.args.get('lng')
-    # restaurant_name = request.args.get('name')
-
-    # review = db.session.query(Review.review).filter(Review.biz_id == biz_id).all()
-    
-    # final_list_d = []
-    # for tup in review:
-    #     final_list_d.append(tup[0])
-
-    
-    # analyser = SentimentIntensityAnalyzer()
-
-    # sum_compound_score = 0
-    # analyzed_reviews = []
-    # for sentence in final_list_d:
-       
-    #     snt = analyser.polarity_scores(sentence)
-    #     sum_compound_score += snt['compound']
-       
-    #     analyzed_reviews.append(sentence + str(snt))
-
-    # avg_compound_score = sum_compound_score/len(analyzed_reviews)
-    # avg_compound_score = ("%.3f" % avg_compound_score) 
-
-
-
-
-################################# word cloud ##################################
     googlemaps_api = os.environ['GOOGLE_API_KEY']
 
     # we stored lat and lng as parameters/ form way dictionary values 
@@ -348,8 +313,8 @@ def reviews(biz_id):
     neu_word_list=set()
     neg_word_list=set()
 
-    from collections import defaultdict
-    word_cloud_dict = defaultdict(list)
+    
+    word_cloud_dict = {}
 
     for sentence in final_list_d:
        
@@ -380,35 +345,95 @@ def reviews(biz_id):
         pos_score = analyser.polarity_scores(word)
         word_cloud_dict[word] = (pos_score['compound']*1000)
     
-        print(word,pos_score)
+        # print(word,pos_score)
 
     for word in neg_word_list:
         neg_score = analyser.polarity_scores(word)
         word_cloud_dict[word] = (neg_score['compound']*1000)
     
-        print(word,neg_score)    
+        # print(word,neg_score)    
     
-    print(word_cloud_dict)
+    # print(word_cloud_dict)
 
-    with open('static/js/dict_trial.csv', 'w') as csv_file:
-        writer = csv.writer(csv_file)
-        writer.writerow(["word", "score"])
-        for key, value in word_cloud_dict.items():
-           writer.writerow([key, value])
 
     avg_compound_score = sum_compound_score/len(analyzed_reviews)
     avg_compound_score = ("%.3f" % avg_compound_score) 
 
 
 
-    
-##############################################################################
-    
-
     return render_template("reviews.html", restaurant_name=restaurant_name, 
-        avg_score_for_restaurant= avg_compound_score,
+        biz_id=biz_id, avg_score_for_restaurant= avg_compound_score,
         data = analyzed_reviews, api_key=googlemaps_api, 
         latitude=latitude, longitude=longitude)
+
+################################################################################
+
+
+
+
+################################################################################
+#   Creating Word Cloud route                                                  #
+#                                                                              #
+################################################################################
+
+
+## creating route to feed review words csv data as json
+@app.route('/process_word_cloud/<biz_id>.json')
+def word_cloud_json(biz_id):
+    """Creates Word Cloud for each restaurant"""
+
+    
+    review = db.session.query(Review.review).filter(Review.biz_id == biz_id).all()
+    
+    final_list_d = []
+    for tup in review:
+        final_list_d.append(tup[0])
+    
+    analyser = SentimentIntensityAnalyzer()
+   
+    pos_word_list=set()
+    neu_word_list=set()
+    neg_word_list=set()
+ 
+    word_cloud_dict = {}
+
+    for sentence in final_list_d:
+
+        tokenized_sent = word_tokenize(sentence)
+        for word in tokenized_sent:
+            word = word.lower()
+            word_compound_score = (analyser.polarity_scores(word))['compound']
+
+            if (word_compound_score) > 0:
+                pos_word_list.add(word)
+                # word_cloud_dict[word] = (word_compound_score*1000)
+
+            elif (word_compound_score) < 0:
+                neg_word_list.add(word)
+                # word_cloud_dict[word] = (word_compound_score*1000)
+
+            else:
+                neu_word_list.add(word)
+                # word_cloud_dict[word] = (word_compound_score*1000)
+ 
+
+
+    for word in pos_word_list:
+        pos_score = analyser.polarity_scores(word)
+        word_cloud_dict[word] = (pos_score['compound']*1000)
+
+    for word in neg_word_list:
+        neg_score = analyser.polarity_scores(word)
+        word_cloud_dict[word] = (neg_score['compound']*1000)
+    
+
+    data =[]
+    for key, value in word_cloud_dict.items():
+       data.append({"word": key, "score": value})
+
+     
+    return jsonify(data)      
+
 
 
 
@@ -516,57 +541,6 @@ def process_check_review_sentiment():
     return jsonify(show_score) 
 
 
-@app.route("/word_cloud")
-def word_cloud():
-
-    sent= "This restaurant is crap, bad, delicious good"
-
-    tokenized_sent = word_tokenize(sent)
-    
-    analyser = SentimentIntensityAnalyzer()
-    pos_word_list=[]
-    neu_word_list=[]
-    neg_word_list=[]
-
-    for word in tokenized_sent:
-        if (analyser.polarity_scores(word)['compound']) > 0:
-            pos_word_list.append(word)
-        elif (analyser.polarity_scores(word)['compound']) < 0:
-            neg_word_list.append(word)
-        else:
-            neu_word_list.append(word)                
-
-    print('Positive:',pos_word_list)        
-    print('Neutral:',neu_word_list)    
-    print('Negative:',neg_word_list) 
-    score = analyser.polarity_scores(sent)
-    print('\nScores:', score)
-
-    
-    from collections import defaultdict
-    word_cloud_dict = defaultdict(list)
-
-    for word in pos_word_list:
-        pos_score = analyser.polarity_scores(word)
-        word_cloud_dict[word] = (pos_score['compound']*1000)
-    
-        print(word,pos_score)
-
-    for word in neg_word_list:
-        neg_score = analyser.polarity_scores(word)
-        word_cloud_dict[word] = (neg_score['compound']*1000)
-    
-        print(word,neg_score)    
-    
-    print(word_cloud_dict)
-    
-    
-    with open('dict_trial.csv', 'w') as csv_file:
-        writer = csv.writer(csv_file)
-        writer.writerow(["word", "score"])
-        for key, value in word_cloud_dict.items():
-           writer.writerow([key, value])
-    return render_template("word_cloud.html")    
 
 
 

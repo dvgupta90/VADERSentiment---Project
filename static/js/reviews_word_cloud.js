@@ -7,16 +7,18 @@ var height = 600;
 
 var review_data = "global";
 
-// d3.csv("/static/js/dict_trial.csv", function(data){
 
-let foo = d3.csv("/static/js/dict_trial.csv", function(d) {
-  // Map csv data onto a data object
-  return { 
-    text: d.word, 
-    size: +d.score, 
-    color: null 
-  }; 
-}).then(function(review_words) {
+bizId = $('#word_cloud').data('bizId');
+// using string formatting below (JS uses backticks ``` and $$)
+d3.json(`/process_word_cloud/${bizId}.json`) 
+  .then(function(review_words) {
+
+  // sets up the data structure for each word 
+  review_words.map(function(d) {
+    d.text = d.word;
+    d.size = +d.score;
+    d.color = null;
+  });
 
   // Create domain for data size (largest and smallest values in data set)
   review_words_scale.domain([
@@ -40,13 +42,11 @@ let foo = d3.csv("/static/js/dict_trial.csv", function(d) {
       return d;
   });
   
+  
   console.log(review_words);
 
   d3.layout.cloud()
-    .size([1100, 600])
-    // .words(data.word.map(function (d){
-    //   return {text: d, size: 10 + Math.random() * 90, test: "haha"};
-    // }))
+    .size([800, 600])
     .words(review_words)
     .padding(10)
     .rotate(function() { return ~~(Math.random() * 2) * 90; })
@@ -71,7 +71,6 @@ function draw(words) {
     .enter().append("text")
       .style("font-size", function(d) { return Math.abs(d.size) + "px"; })
       .style("font-family", "Impact")
-      // .style("fill", function(d, i) { return color(i); }) // FIX
       .style("fill", function(d) { return d.color; })
       .attr("text-anchor", "middle")
       .attr("transform", function(d) {
