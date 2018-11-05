@@ -37,7 +37,7 @@ class Preference(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return ("<Preference preference_id={} user_id={} cuisine={}".format(self.preference_id, self.user_id, self.cuisine))
+        return ("<Preference preference_id={} user_id={} cuisine={}>".format(self.preference_id, self.user_id, self.cuisine))
 
 
     __tablename__ = "preferences"
@@ -55,7 +55,7 @@ class Restaurant_details(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return ("<Restaurant_details restaurant_id={} restaurant_name={} category={} price={}".format(self.preference_id, self.user_id, self.restaurant_name, self.category, self.price))
+        return ("<Restaurant_details restaurant_id={} restaurant_name={} category={} price={}>".format(self.restaurant_id, self.restaurant_name, self.category, self.price))
 
 
     __tablename__ = "restaurants"
@@ -79,7 +79,7 @@ class Favourite(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return ("<Favourite fav_id={} user_id={} restaurant_id".format(self.fav_id, self.user_id, self.restaurant_id))
+        return ("<Favourite fav_id={} user_id={} restaurant_id={}>".format(self.fav_id, self.user_id, self.restaurant_id))
 
 
     __tablename__ = "favourites"

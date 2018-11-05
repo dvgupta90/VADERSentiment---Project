@@ -46,7 +46,7 @@ url = "https://api.yelp.com/v3/businesses"
 @app.route("/trial_api_call", methods=['GET'])
 def trial_api_call():
     headers = {'Authorization': 'Bearer ' + yelp_api}
-    payload= {"location": "94043", "term": "Restaurants - thai"}
+    payload= {"location": "94043", "term": "Restaurants - thai", "limit": int(30)}
     response = requests.get(url+"/search", headers=headers, params = payload)
     data = response.json()
 
@@ -438,7 +438,7 @@ def word_cloud_json(biz_id):
 
 
 ################################################################################
-#   User Profile and Add to Favourites routes                                  #
+#   User Profile, Add/Remove Favourites routes                                  #
 #                                                                              #
 ################################################################################
 
@@ -479,7 +479,7 @@ def add_to_fav():
 
 
     restaurant = Restaurant_details.query.filter_by(biz_id = rest_biz_id).first() 
-
+  
     if restaurant is None:
         restaurant = Restaurant_details(biz_id = rest_biz_id, 
             restaurant_name = rest_name,
@@ -506,6 +506,48 @@ def add_to_fav():
 
     show_status = {'message':'Your Favourite has been saved'}
     return jsonify(show_status)
+
+
+
+
+###############################################################################
+
+@app.route("/remove_from_fav", methods=["POST"])
+def remove_from_fav():
+    """User can remove a restaurant from their fav"""
+    
+    user_object = User.query.get(session['user_id'])
+    
+
+    rest_id = request.form["database_rest_id"] ## restaurant id in favourites table
+    
+
+    restaurant = Restaurant_details.query.filter_by(restaurant_id = rest_id).first()
+    
+
+    remove_fav = Favourite.query.filter(Favourite.restaurant_id == restaurant.restaurant_id, 
+        Favourite.user_id== user_object.user_id).all()
+    
+    
+
+    if remove_fav is not None:
+        fav_object = Favourite.query.filter_by(fav_id = remove_fav[0].fav_id).all()
+        # remove_fav is a list. List of objects. so we need to access 
+        # the object in it using index. same goes for fav_object.
+        
+        db.session.delete(fav_object[0])
+        db.session.commit()
+
+
+    show_status = {'message':'Your Favourite has been removed'}
+    return jsonify(show_status)
+
+
+
+
+
+
+
 
 
 

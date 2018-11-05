@@ -1,4 +1,17 @@
 {% extends 'base.html' %}
+
+{% block head %}
+
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="../static/css/materialize.min.css"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+{% endblock %}
+
+
+
 {% block content %}
 
   <h3>{{ user.fname }} {{ user.lname}}</h3>
@@ -9,8 +22,11 @@
 <div>
 
 {% for fav in user.fav %}
-    <p>Favorites = {{fav.rest.restaurant_name}}<br>
-        {{fav.rest.category}}<br></p>
+    <p>Favorites = {{fav.rest.restaurant_name}}  <br>
+        <!-- <a id = "remove-fav-button" class="waves-effect waves-light remove-fav-button btn" data-rest-id ="{{fav.restaurant_id}}" >Remove from Favorites</a> -->
+        <button id = "remove-fav-button" class="remove-fav-button" type="button" data-rest-id ="{{fav.restaurant_id}}" value="Remove from Favorites" >Remove from Favorites</button><br>
+        
+        cuisine: {{fav.rest.category}}<br></p>
     <img src="{{fav.rest.image}}" height= "100" width="200">
 
 
@@ -18,5 +34,11 @@
 </div>
 
 
+
+<!-- ###################CSS styling ##################################-->
+  <script type="text/javascript" src="../static/js/materialize.min.js"></script>
+<!-- ########################################################################## -->
+
+<script type="text/javascript" src="/static/js/remove_user_fav.js"></script>
 
 {% endblock %}

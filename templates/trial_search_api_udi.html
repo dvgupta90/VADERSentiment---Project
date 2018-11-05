@@ -16,13 +16,6 @@
 
 
 
-<!-- ####################CSS styling########## -->
-<a class="waves-effect waves-light btn">button</a>
-<a class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>button</a>
-<a class="waves-effect waves-light btn"><i class="material-icons right">cloud</i>button</a>
-
-<!-- ####################CSS styling########## -->
-
 
 
 <div>
@@ -43,7 +36,8 @@
                 <h4>
                     <a href="/process_searchbox/{{business['id']}}?lat={{(business['coordinates'])['latitude']}}&lng={{(business['coordinates'])['longitude']}}&name={{business['name']}}" class="map">{{business['name']}}</a>
                 </h4>
-                <a id = "add-to-fav-button" class="waves-effect waves-light add-to-fav-button btn" data-id={{business['id']}} data-rating={{business['rating']}} data-category={{(((business['categories'])[0])['title'])}} data-price={{business['price']}} data-name={{business['name']}} data-image={{business['image_url']}}>Add to Favourite</a>
+                
+                <a id = "add-to-fav-button" class="waves-effect waves-light add-to-fav-button btn" data-id="{{business['id']}}" data-rating="{{business['rating']}}" data-category="{{ business['categories'][0]['title'] }}" data-price="{{business['price']}}" data-name="{{business['name']}}" data-image="{{business['image_url']}}">Add to Favourite</a>
             </div>
             <!-- <div class="card-action">
               <a href="#">This is a link</a>

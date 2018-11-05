@@ -4,12 +4,14 @@
 function display_message(results){
     let showmessage = results.message;
     alert(showmessage);
-    // $('.add-to-fav-button').attr('disabled', true);
-
 // it'll take results whatever server.py file returns
 
 }
 
+
+// function disable(evt) {
+//     $(evt.target).removeClass("waves-effect waves-light").addClass('disabled');
+// }
 
 function add_to_fav(evt) {
     let payload = {
@@ -20,7 +22,14 @@ function add_to_fav(evt) {
     yelp_price:$(evt.target).data('price'),
     yelp_image_url:$(evt.target).data('image'),
     };
+
     $.post('/add_to_fav', payload, display_message);
+    // disable(evt)
 }
 // using a jquery class selector
 $('.add-to-fav-button').on('click', add_to_fav);
+
+
+
+
+
