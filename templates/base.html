@@ -9,7 +9,9 @@
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-      <style type="text/css"></style>
+    
+
+  
 
  {% block head %}
  {% endblock head %}
@@ -23,17 +25,17 @@
     <!-- ################### Nav bar ###################################### -->
     <nav>
       <div class="nav-wrapper transparent">
-        <a href="/" class="brand-logo orange-text text-darken-2">SAFIYA</a>
+        <a href="/" class="brand-logo deep-orange-text text-accent-3 ">SAFIYA</a>
         <ul class="right hide-on-med-and-down" >
-          <li><a href="/about" class="orange-text text-darken-2">About</a></li>
-          <li><a href="/search" class="orange-text text-darken-2">Search</a></li>
-          <li><a href="/check_your_review" class="orange-text text-darken-2">TryMe</a></li>
-          <li><a href="/profile" class="orange-text text-darken-2">User Profile</a></li>
+          <li><a href="/about" class="deep-orange-text mynavclass">About</a></li>
+          <li><a href="/search" class="deep-orange-text mynavclass">Search</a></li>
+          <li><a href="/check_your_review" class="deep-orange-text mynavclass">TryMe</a></li>
+          <li><a href="/profile" class="deep-orange-text mynavclass">User Profile</a></li>
           {% if "user_id" in session %}
-          <li><a href="/logout" class="orange-text text-darken-2">Logout</a></li>
+          <li><a href="/logout" class="deep-orange-text mynavclass">Logout</a></li>
           {% else %}
-          <li><a href="/login" class="orange-text text-darken-2">Login</a></li>
-          <li><a href="/register" class="orange-text text-darken-2">Sign Up</a></li>
+          <li><a href="/login" class="deep-orange-text mynavclass">Login</a></li>
+          <li><a href="/register" class="deep-orange-text mynavclass">Sign Up</a></li>
           {% endif %}
         </ul>
       </div>
