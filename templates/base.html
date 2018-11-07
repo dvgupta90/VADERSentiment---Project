@@ -1,40 +1,62 @@
 <!doctype html>
 <html>
 <head>
+
+     <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="../static/css/materialize.min.css"  media="screen,projection"/>
+      <link rel="stylesheet" type="text/css" href="../static/css/personal_stylesheet.css"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+      <style type="text/css"></style>
+
  {% block head %}
- {% endblock %}
+ {% endblock head %}
+
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <title>Reviews</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 </head>
 
 <body>
+    <!-- ################### Nav bar ###################################### -->
+    <nav>
+      <div class="nav-wrapper transparent">
+        <a href="/" class="brand-logo orange-text text-darken-2">SAFIYA</a>
+        <ul class="right hide-on-med-and-down" >
+          <li><a href="sass.html" class="orange-text text-darken-2">About</a></li>
+          <li><a href="/search" class="orange-text text-darken-2">Search</a></li>
+          <li><a href="/check_your_review" class="orange-text text-darken-2">TryMe</a></li>
+          <li><a href="/profile" class="orange-text text-darken-2">User Profile</a></li>
+          {% if "user_id" in session %}
+          <li><a href="/logout" class="orange-text text-darken-2">Logout</a></li>
+          {% else %}
+          <li><a href="/login" class="orange-text text-darken-2">Login</a></li>
+          <li><a href="/register" class="orange-text text-darken-2">Sign Up</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <!-- ################### Nav bar ###################################### -->
 
 
-  
 
-
-{% if "user_id" in session %}
-  <form action="/logout">
-    <input type="submit" value="Logout" />
-</form>
-{% else %}
-  <form action="/login">
-    <input type="submit" value="Login" />
-</form>
-{% endif %}
-
-<hr>
-
-{% for flash in get_flashed_messages() %}
-  {{ flash }}
-{% endfor %}
+    <div>
+        <ul>
+    {% for flash in get_flashed_messages() %}
+      <li>{{ flash }}</li>
+    {% endfor %}
+        </ul>
+    </div>
 
 {% block content %}      
 
 {% endblock %}
+        <!-- ###################CSS styling ##################################-->
+        <script type="text/javascript" src="../static/css/js/materialize.min.js"></script>
 
-
-
+        <!-- ########################################################################## -->
 
 
 </body>

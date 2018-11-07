@@ -1,44 +1,54 @@
 {% extends 'base.html' %}
+
+{% block head %}
+  <div class= "pattern">
+  </div>
+{% endblock head %}
+
 {% block content %}
+
 
 <h1>Register</h1>
 
-<form action="process_registeration" method="POST">
+<div class = "form">
+  <form action="process_registeration" method="POST">
 
-  <div>
-    <label>
-      First Name
-      <input type="text" name="firstname" required>
-    </label>
-  </div>
+    <div>
+      <label>
+        First Name
+        <input type="text" name="firstname" required>
+      </label>
+    </div>
 
-  <div>
-    <label>
-      Last Name
-      <input type="text" name="lastname" required>
-    </label>
-  </div>
+    <div>
+      <label>
+        Last Name
+        <input type="text" name="lastname" required>
+      </label>
+    </div>
 
-  <div>
-    <label>
-      Email
-      <input type="email" name="email" required>
-    </label>
-  </div>
+    <div>
+      <label>
+        Email
+        <input type="email" name="email" required>
+      </label>
+    </div>
 
-  <div>
-    <label>
-      Password
-      <input type="password" name="password" required>
-    </label>
-  </div>
+    <div>
+      <label>
+        Password
+        <input type="password" name="password" required>
+      </label>
+    </div>
 
- 
+   
 
-  <div>
-    <input type="submit" value="Register">
-  </div>
+    <div>
+      <input class="waves-effect waves-light btn" type="submit" value="Register">
+    </div>
 
-</form>
+  </form>
+
+</div>
 
 {% endblock %}

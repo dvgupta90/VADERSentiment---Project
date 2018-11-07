@@ -1,21 +1,52 @@
 {% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock head %}
+
+
+
+
 {% block content %}
 
 <div>
     <h1> Search </h1>
 </div>
 
-<div>
-    <form action="/process_searchbox">
-  <input type="text" placeholder="Enter a zipcode" name="zipcode">
-  <select name= "cuisine">
-      <option value="american">American</option>
-      <option value="indian">Indian</option>
-      <option value="thai">Thai</option>
+<div class="container form">
 
-  </select>
-  <input type= "submit" value= "Submit"> 
+  <form action="/process_searchbox">
+
+    <div class="row">
+
+      <div class="col-6">
+      
+        <input type="text" placeholder="Enter a zipcode" name="zipcode">
+
+      </div>
+    </div>
+
+      
+    <div class="row">
+
+      <div class="col-6">
+  
+        <select name= "cuisine">
+            <option value="american">American</option>
+            <option value="indian">Indian</option>
+            <option value="thai">Thai</option>
+
+        </select>
+  
+        <input class="waves-effect waves-light btn" type= "submit" value= "Submit"> 
+  
+      </div>
+    </div>
   </form>
+
 </div>
 
-{% endblock %}
+
+
+
+{% endblock content%}
