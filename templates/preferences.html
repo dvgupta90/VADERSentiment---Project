@@ -1,8 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h4>Select 2 types of cuisines you like..</h4>
-<form action="process_preferences" method="POST">
+<h3>Select 2 types of cuisines you like..</h3>
+<div class="row">
+    <form class="col s12" action="process_preferences" method="POST">
+      <div class="row">
+        <h6>Preference 1</h6>
+
+        <select name= "pref1">
+          <option value="american">American</option>
+          <option value="indian">Indian</option>
+          <option value="thai">Thai</option>
+      </select>
+        <div class="row">
+          <h6>Preference 2</h6>
+
+          <select name= "pref2">
+            <option value="american">American</option>
+            <option value="indian">Indian</option>
+            <option value="thai">Thai</option>
+            </select>
+        </div>
+        <div class="row">
+          <input class="waves-effect waves-light btn" type="submit" value="Submit">
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+<!-- <form action="process_preferences" method="POST">
 
   <div>
     <p>Preference 1</p>
@@ -45,8 +72,7 @@
     <input type="submit" value="Submit">
   </div>
 
-</form>
-
+</form> -->
 
 
 {% endblock %}

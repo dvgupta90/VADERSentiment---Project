@@ -1,16 +1,49 @@
 {% extends 'base.html' %}
 
 {% block head %}
-  <div class= "pattern">
-  </div>
+  
 {% endblock head %}
 
 {% block content %}
 
 
-<h1>Register</h1>
+  <h2>Register</h2>
+  <div class="row">
+    <form class="col s12" action="/process_registeration" method="POST">
+      <div class="row">
+        <div class="input-field col s8">
+          <input placeholder="First Name" id="first_name" name="firstname" required type="text" class="validate">
+          <!-- <label for="first_name">First Name</label> -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8">
+          <input placeholder="Last Name" id="last_name" name="lastname" required type="text" class="validate">
+          <!-- <label for="last_name">Last Name</label> -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8">
+          <input placeholder="Email Address" id="email" name="email" required type="email" class="validate">
+          <!-- <label for="email">Email</label> -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8">
+          <input placeholder="Password" id="password" name="password" required type="password" class="validate">
+          <!-- <label for="password">Password</label> -->
+        </div>
+      </div>
+      <div class="row">
+        <input class="waves-effect waves-light btn" type="submit" value="Register">
+      </div>
+    </form>
+  </div>
 
-<div class = "form">
+
+
+
+<!-- <div class = "form">
   <form action="process_registeration" method="POST">
 
     <div>
@@ -49,6 +82,6 @@
 
   </form>
 
-</div>
+</di -->
 
 {% endblock %}

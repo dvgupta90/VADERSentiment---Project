@@ -14,14 +14,21 @@
     }
 
 .color-block {
-  background: rgba(26, 26, 26, 0.20); /* translucent black */
+  background: rgba(26, 26, 26, 0.30); /* translucent black */
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: -1
-}    
+}   
+
+.card-small{
+    /*left: 25%;*/
+    /*right: 50%;*/
+    width: 100%;
+    /*height: 50%;*/
+} 
 
 /*.form input[type=email], input[type=password], input[type=text], select {
         width: 100%;
@@ -48,18 +55,34 @@
     input[type=submit]:hover {
         background-color: #45a049;
     }*/
-*/
 
-.pattern {
-  background: url(“https://www.toptal.com/designers/subtlepatterns/patterns/spring.png“);
-  position: fixed;
-  z-index: -1;
+
+/*.pattern {
+  background: url(“http://duniakulinerbandung.com/wp-content/uploads/2014/12/1-o.jpg“);
+  position: absolute;
+  z-index: -2;
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
   background-repeat: repeat;
-}
+  top: 0
+  left: 0;
+}*/
+.pattern {
+    background-image: url("http://www.zlatapalicica.si/wp-content/uploads/2017/06/food.png");
+    background-repeat: repeat;
+    /*background-size: cover;*/
+    position: fixed;
+    /* top and left are set to 0 to start the image at the top left corner. origin(0,0) of coordinate system*/
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* z-index at -1 sets the positioning of image behind everything else. so everything else goes on top of it */
+    z-index: -2;
+    
+    }
 
 
 

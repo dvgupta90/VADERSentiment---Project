@@ -438,9 +438,16 @@ def word_cloud_json(biz_id):
 
 
 ################################################################################
-#   User Profile, Add/Remove Favourites routes                                  #
+#   User Profile, About SAFIYA, Add/Remove Favourites routes                                  #
 #                                                                              #
 ################################################################################
+
+@app.route('/about')
+def about_page():
+    """Show info about website SAFIYA"""
+
+    return render_template("about_page.html")
+
 
 
 @app.route('/profile')

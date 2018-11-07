@@ -10,11 +10,22 @@
 
         #vader { margin-top: 625px;}
 
+        .card-image{
+          min-width: 250px;
+          height: auto;
+          padding: 5px;
+        }
+
 </style>
 
 {% endblock head %}
 
 {% block content %}
+
+<div>
+    <h5>{{restaurant_name}} has an average score of: {{avg_score_for_restaurant}}</h5>
+  </div>
+
 
 
   <div id="map" data-lat={{latitude}} data-lng={{longitude}}></div>
@@ -24,35 +35,64 @@
   <div id="word_cloud" data-biz-id={{biz_id}}></div>
   <!-- #################### word cloud #################################### -->
 
+
+
+<br>
 <div id='vader'>
+  <h5>VADER computed Sentiment score of Reviews</h5>
 
-  <h1>VADER computed Sentiment score of Reviews</h1>
-  <div>
-    {{restaurant_name}} has an average score of: {{avg_score_for_restaurant}}
-  </div>
-
+  
   <br>
   <br>
 
-  <div>
-
-      {%for name in data%}
-          <!-- <li>{{name}} 
-
-            </li>  --> 
-            <li>{% set s = name.split('{') %}
+  <!-- <div>
+    {%for name in data%}
+          <li>{% set s = name.split('{') %}
             {{s[0]}}
             <br>{% set a =s[1].replace('}',"") %}
             {{a}} 
-        </li>
-              
+          </li>
+      {%endfor%} 
+  </div> -->
 
-          {%endfor%}
-     
-  </div>
+  {%for name in data%}
+    {% set s = name.split('{') %}
+    {% set a =s[1].replace('}',"") %}
+    <div class="card horizontal card-small valign-wrapper">
 
-  
+      <div class="card-image waves-effect waves-block waves-light">
+        <img class="activator" src="http://blog.hotech.com.tr/wp-content/uploads/2015/08/Hotel_guest_reviews.png">
+      </div>
+      <div class="card-content">
+        <i class="material-icons right">more_vert</i>
+        <span class="card-title activator grey-text text-darken-4 ">{{s[0]}}</span>
+      </div>
+      <div class="card-reveal">
+        <span class="card-title grey-text text-darken-4 ">{{a}}<i class="material-icons right">close</i></span>
+      </div>
+    </div>
+  {%endfor%} 
 </div>
+  <!-- <div id='vader'>
+
+    <h4>VADER computed Sentiment score of Reviews</h4>
+    <div>
+      {{restaurant_name}} has an average score of: {{avg_score_for_restaurant}}
+    </div>
+    <br>
+    <br>
+    <div>
+      {%for name in data%}
+            <li>{% set s = name.split('{') %}
+              {{s[0]}}
+              <br>{% set a =s[1].replace('}',"") %}
+              {{a}} 
+            </li>
+        {%endfor%} 
+    </div>
+  </div> -->
+<!-- </div> -->
+
 
 <!-- ##################### Google maps API ################# -->
 

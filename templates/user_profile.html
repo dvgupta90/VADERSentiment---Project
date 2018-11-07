@@ -13,25 +13,68 @@
 
 
 {% block content %}
+<div class="col s8">
+  <div class="card horizontal col s8 push s2">
+    <div class="card-image">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqE7vZfX9CID8HMAzhTliXxKGew2V5CcphD_7g9LosxM8yvav7">
+    </div>
+    <div class="card-stacked">
+      <div class="card-content">
+        <h3>{{ (user.fname).capitalize() }} {{ (user.lname).capitalize() }}</h3>
 
-  <h3>{{ user.fname }} {{ user.lname}}</h3>
+        <p>User ID: {{ user.user_id }}</p>
+        <p>Email: {{ user.email }}</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <p>User ID: {{ user.user_id }}</p>
-  <p>Email: {{ user.email }}</p>
-  <p>Password: {{ user.password }}</p>
-<div>
+<br>
+<br>
+<div class="col s8">
+  <div class="row">
+    <h3>Favourites</h3>
+  </div>
+  {% for fav in user.fav %}
+    <div class="col s8">
+      <div class="card horizontal col s8 push s2">
+        <div class="card-image">
+          <img src="{{fav.rest.image}}" height= "200" width="200">
+        </div>
+        <div class="card-stacked">
+          <div class="card-content">
+            <h5>
+              {{fav.rest.restaurant_name}}
+              <br>
+              Cuisine: {{fav.rest.category}}
+            </h5>
+          </div>
+          <div class="card-action">
+            <button id = "remove-fav-button" class="waves-effect waves-light btn remove-fav-button" type="button" data-rest-id ="{{fav.restaurant_id}}" value="Remove from Favorites" >Remove from Favorites</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+
+
+  
+  
+<!-- <div>
 
 {% for fav in user.fav %}
     <p>Favorites = {{fav.rest.restaurant_name}}  <br>
-        <!-- <a id = "remove-fav-button" class="waves-effect waves-light remove-fav-button btn" data-rest-id ="{{fav.restaurant_id}}" >Remove from Favorites</a> -->
-        <button id = "remove-fav-button" class="remove-fav-button" type="button" data-rest-id ="{{fav.restaurant_id}}" value="Remove from Favorites" >Remove from Favorites</button><br>
+        
+        <button id = "remove-fav-button" class="waves-effect waves-light btn remove-fav-button" type="button" data-rest-id ="{{fav.restaurant_id}}" value="Remove from Favorites" >Remove from Favorites</button><br>
         
         cuisine: {{fav.rest.category}}<br></p>
     <img src="{{fav.rest.image}}" height= "100" width="200">
 
 
 {% endfor %}
-</div>
+</div> -->
 
 
 
