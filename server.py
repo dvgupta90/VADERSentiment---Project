@@ -29,19 +29,6 @@ yelp_api = os.environ['YELP_API_KEY']
 url = "https://api.yelp.com/v3/businesses"
 
 
-# @app.route("/api_call", methods=['GET'])
-# def api_call():
-#     headers = {'Authorization': 'Bearer ' + yelp_api}
-#     payload= {"location": "94043", "term": "Restaurants - Indian"}
-#     response = requests.get(url+"/search", headers=headers, params = payload)
-#     data = response.json()
-
-#     list1 = []
-#     for business in data['businesses']:
-#         list1.append(business['name'])
-    
-    
-#     return render_template("trial_api.html",data =list1)
 
 @app.route("/trial_api_call", methods=['GET'])
 def trial_api_call():

@@ -9,7 +9,14 @@
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    
+      <!-- Google Fonts -->
+      <link href="https://fonts.googleapis.com/css?family=Spicy+Rice" rel="stylesheet">
+
+      <style type="text/css">
+        .flash {
+          color: red;
+        }
+      </style>
 
   
 
@@ -44,7 +51,7 @@
 
 
 
-    <div>
+    <div class="flash messages">
         <ul>
     {% for flash in get_flashed_messages() %}
       <li>{{ flash }}</li>
