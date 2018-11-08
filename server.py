@@ -30,55 +30,6 @@ url = "https://api.yelp.com/v3/businesses"
 
 
 
-@app.route("/trial_api_call", methods=['GET'])
-def trial_api_call():
-    headers = {'Authorization': 'Bearer ' + yelp_api}
-    payload= {"location": "94043", "term": "Restaurants - thai", "limit": int(30)}
-    response = requests.get(url+"/search", headers=headers, params = payload)
-    data = response.json()
-
-    
-    
-    return render_template("trial_api_review.html",data =data)
-
-
-@app.route("/api1", methods=['GET'])
-def api1_call():
-    headers = {'Authorization': 'Bearer ' + yelp_api}
-    payload= {"location": "94043", "term": "bars"}
-    response = requests.get(url+"/search", headers=headers, params = payload)
-    data = response.json()
-    
-   
-
-
-
-    biz_dic = {}
-   
-    for business in data['businesses']:
-        biz_id = business['id']
-        d1 = requests.get(url+"/"+biz_id+"/reviews",
-            headers=headers,
-            params = {"locale":"en_US"})
-        # biz_dic[biz_id] = d1.json()['reviews']
-        biz_dic[biz_id] = [r['text'] for r in d1.json()['reviews']]
-
-            
-    # biz_dic = {}
-   
-    # for business in data['businesses']:
-    #     biz_id = business['id']
-    #     d1 = requests.get(url+"/"+biz_id+"/reviews",
-    #         headers=headers,
-    #         params = {"locale":"en_US"})
-    #     data1 = d1.json()['reviews']
-    #     for item in data1:
-    #         biz_dic[biz_id] = item['text']
-
-    
-    return render_template("api1.html",data=biz_dic)    
-
-
 
 
 ################################################################################
