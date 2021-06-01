@@ -15,6 +15,6 @@ psycopg2==2.7.5
 requests==2.19.1
 six==1.11.0
 SQLAlchemy==1.2.12
-urllib3==1.23
+urllib3==1.26.5
 vaderSentiment==3.2.1
 Werkzeug==0.14.1
